@@ -1,174 +1,239 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unsere Hochzeit</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Open Sans', sans-serif;
-            background-color: #f9f2f2;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-        }
-        
-        header {
-            background-color: #e8b4cb;
-            color: white;
-            padding: 2rem;
-            text-align: center;
-            border-bottom: 4px solid #d17fa5;
-        }
-        
-        h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 3.5rem;
-            margin: 0;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        
-        section {
-            background-color: white;
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        h2 {
-            color: #d17fa5;
-            font-size: 2rem;
-            margin-top: 0;
-        }
-        
-        .faq-item {
-            margin-bottom: 1rem;
-        }
-        
-        .faq-question {
-            font-weight: 600;
-            color: #d17fa5;
-        }
-        
-        .hotel {
-            margin-bottom: 1.5rem;
-        }
-        
-        .hotel-name {
-            font-weight: 600;
-            color: #d17fa5;
-        }
-        
-        form {
-            display: grid;
-            grid-gap: 1rem;
-        }
-        
-        label {
-            font-weight: 600;
-        }
-        
-        input, textarea {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        
-        button {
-            background-color: #e8b4cb;
-            color: white;
-            border: none;
-            padding: 0.75rem;
-            font-size: 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        button:hover {
-            background-color: #d17fa5;
-        }
-        
-        footer {
-            text-align: center;
-            padding: 1rem;
-            background-color: #e8b4cb;
-            color: white;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unsere Hochzeit – 30.07.2026</title>
+
+  <style>
+    :root {
+      --pink: #ff4d8d;
+      --blue: #3aa9ff;
+      --green: #2ecc71;
+      --yellow: #f1c40f;
+      --dark: #222;
+      --light: #fafafa;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(120deg, var(--pink), var(--blue), var(--green));
+      background-size: 300% 300%;
+      animation: gradient 15s ease infinite;
+      color: var(--dark);
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    header {
+      text-align: center;
+      padding: 4rem 1rem;
+      color: white;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      font-size: 1.2rem;
+    }
+
+    main {
+      background: var(--light);
+      border-radius: 24px 24px 0 0;
+      padding: 2rem 1rem 4rem;
+      max-width: 900px;
+      margin: -2rem auto 0;
+    }
+
+    section {
+      margin-bottom: 3rem;
+    }
+
+    h2 {
+      color: var(--pink);
+      margin-bottom: 1rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+    }
+
+    input, textarea, select, button {
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      background: var(--pink);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      margin-top: 1rem;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    footer {
+      text-align: center;
+      color: white;
+      padding: 2rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    .faq-item {
+      margin-bottom: 1rem;
+    }
+
+    .faq-item strong {
+      color: var(--blue);
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>Unsere Hochzeit</h1>
-        <p>Wir freuen uns, diesen besonderen Tag mit Ihnen zu teilen!</p>
-    </header>
-    
-    <div class="container">
-        <section>
-            <h2>Häufig gestellte Fragen</h2>
-            <div class="faq-item">
-                <p class="faq-question">Wann und wo findet die Hochzeit statt?</p>
-                <p>Die Hochzeit findet am 15. Juli 2026 um 15:00 Uhr im Schlossgarten statt.</p>
-            </div>
-            <div class="faq-item">
-                <p class="faq-question">Gibt es eine Kleiderordnung?</p>
-                <p>Wir empfehlen festliche Kleidung, aber es gibt keine strenge Kleiderordnung.</p>
-            </div>
-            <div class="faq-item">
-                <p class="faq-question">Können Kinder teilnehmen?</p>
-                <p>Ja, Kinder sind herzlich willkommen!</p>
-            </div>
-        </section>
-        
-        <section>
-            <h2>Hotel-Empfehlungen</h2>
-            <div class="hotel">
-                <p class="hotel-name">Hotel Rosenhof</p>
-                <p>Adresse: Musterstraße 123, 12345 Musterstadt</p>
-                <p>Telefon: +49 123 456789</p>
-                <p>Entfernung zur Location: 5 Minuten zu Fuß</p>
-            </div>
-            <div class="hotel">
-                <p class="hotel-name">Gasthaus Zum Löwen</p>
-                <p>Adresse: Beispielweg 456, 12345 Musterstadt</p>
-                <p>Telefon: +49 123 987654</p>
-                <p>Entfernung zur Location: 10 Minuten zu Fuß</p>
-            </div>
-        </section>
-        
-        <section>
-            <h2>Kontaktformular</h2>
-            <form action="#" method="post">
-                <div>
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-                <div>
-                    <label for="email">E-Mail:</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div>
-                    <label for="message">Nachricht:</label>
-                    <textarea id="message" name="message" rows="4" required></textarea>
-                </div>
-                <button type="submit">Senden</button>
-            </form>
-        </section>
+
+<header>
+  <h1>Wir heiraten! 🎉</h1>
+  <p>30. Juli 2026 · Standesamt & Feier im Yolk · Münster</p>
+  <p><strong>Motto: bunt</strong></p>
+</header>
+
+<main>
+
+  <section>
+    <h2>💍 Ablauf</h2>
+    <div class="card">
+      <p><strong>Datum:</strong> 30.07.2026</p>
+      <p><strong>Standesamt:</strong> tagsüber (Details folgen)</p>
+      <p><strong>Feier:</strong> abends im <strong>Yolk, Münster</strong></p>
     </div>
-    
-    <footer>
-        <p>© 2025 Unsere Hochzeit</p>
-    </footer>
+  </section>
+
+  <section>
+    <h2>🏨 Hotelempfehlungen</h2>
+    <div class="grid grid-2">
+      <div class="card">
+        <strong>ATLANTIC Hotel Münster</strong>
+        <p>Zentral, modern, fußläufig</p>
+      </div>
+      <div class="card">
+        <strong>Motel One Münster</strong>
+        <p>Stylisch & preiswert</p>
+      </div>
+      <div class="card">
+        <strong>H4 Hotel Münster</strong>
+        <p>Direkt am Bahnhof</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>❓ FAQ</h2>
+    <div class="card">
+      <div class="faq-item">
+        <strong>Dresscode?</strong>
+        <p>Bunt! Alles ist erlaubt – je farbenfroher, desto besser.</p>
+      </div>
+      <div class="faq-item">
+        <strong>Kinder?</strong>
+        <p>Ja, sehr gerne.</p>
+      </div>
+      <div class="faq-item">
+        <strong>Geschenke?</strong>
+        <p>Eure Anwesenheit ist das größte Geschenk.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>📝 Rückmeldung</h2>
+    <div class="card">
+      <form onsubmit="handleSubmit(event)">
+        <div class="grid grid-2">
+          <div>
+            <label>Name</label>
+            <input required />
+          </div>
+          <div>
+            <label>Kommt ihr?</label>
+            <select required>
+              <option value="">Bitte wählen</option>
+              <option>Ja</option>
+              <option>Nein</option>
+            </select>
+          </div>
+        </div>
+
+        <label>Anzahl Personen</label>
+        <input type="number" min="1" placeholder="z. B. 2"/>
+
+        <label>Musikwünsche 🎶</label>
+        <textarea placeholder="Was darf auf keinen Fall fehlen?"></textarea>
+
+        <label>Essen & Unverträglichkeiten 🍽️</label>
+        <textarea placeholder="Vegetarisch, vegan, Allergien …"></textarea>
+
+        <button type="submit">Antwort senden</button>
+      </form>
+
+      <p style="margin-top:1rem;font-size:0.85rem;color:#666;">
+        Hinweis: Das Formular ist statisch. Bitte gebt uns eure Antwort zusätzlich persönlich oder per Nachricht.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Wir freuen uns auf euch 💖</p>
+</footer>
+
+<script>
+  function handleSubmit(event) {
+    event.preventDefault();
+    alert("Danke für eure Rückmeldung! 💕");
+  }
+</script>
+
 </body>
 </html>
