@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Unsere Hochzeit – 30.07.2026</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 </head>
 
 <body>
@@ -22,7 +23,11 @@
     <div class="card">
       <p><strong>Datum:</strong> 30.07.2026</p>
       <p><strong>Standesamt:</strong> tagsüber (Details folgen)</p>
-      <p><strong>Feier:</strong> abends im <strong>Yolk, Münster</strong></p>
+      <p>📍 Hörsterstraße 28, 48143 Münster</p>
+      <div id="mapStandesamt" class="map"></div>
+      <p style="margin-top: 1rem;"><strong>Feier:</strong> abends im <strong>Yolk, Münster</strong></p>
+      <p>📍 Bennostraße 5, 48155 Münster</p>
+      <div id="mapYolk" class="map"></div>
     </div>
   </section>
 
@@ -103,6 +108,7 @@
   <p>Wir freuen uns auf euch 💖</p>
 </footer>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
 <script src="script.js"></script>
 
 </body>

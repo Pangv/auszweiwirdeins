@@ -11,6 +11,34 @@ const API_CONFIG = {
   }
 };
 
+// Karten initialisieren
+function initMaps() {
+  // Standesamt Karte
+  const mapStandesamt = L.map('mapStandesamt').setView([51.9606649, 7.6261347], 15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 19
+  }).addTo(mapStandesamt);
+  
+  const markerStandesamt = L.marker([51.9606649, 7.6261347]).addTo(mapStandesamt);
+  markerStandesamt.bindPopup('<b>Standesamt Münster</b><br>Hörsterstraße 28<br>48143 Münster<br><a href="https://www.openstreetmap.org/?mlat=51.9606649&mlon=7.6261347#map=17/51.9606649/7.6261347" target="_blank">In OpenStreetMap öffnen</a>').openPopup();
+  
+  // Yolk Karte
+  const mapYolk = L.map('mapYolk').setView([51.9485, 7.6095], 15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 19
+  }).addTo(mapYolk);
+  
+  const markerYolk = L.marker([51.9485, 7.6095]).addTo(mapYolk);
+  markerYolk.bindPopup('<b>Yolk</b><br>Bennostraße 5<br>48155 Münster<br><a href="https://www.openstreetmap.org/?mlat=51.9485&mlon=7.6095#map=17/51.9485/7.6095" target="_blank">In OpenStreetMap öffnen</a>').openPopup();
+}
+
+// Karten beim Laden der Seite initialisieren
+if (typeof L !== 'undefined') {
+  window.addEventListener('load', initMaps);
+}
+
 async function handleSubmit(event) {
   event.preventDefault();
   
