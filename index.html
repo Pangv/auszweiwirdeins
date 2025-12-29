@@ -4,8 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Unsere Hochzeit – 30.07.2026</title>
+  <link rel="stylesheet" href="leaflet.css">
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="leaflet.js"></script>
 </head>
 
 <body>
@@ -73,11 +74,11 @@
       <form id="rsvpForm" onsubmit="handleSubmit(event)">
         <div class="grid grid-2">
           <div>
-            <label>Name</label>
+            <label for="guestName">Name</label>
             <input name="name" id="guestName" required />
           </div>
           <div>
-            <label>Kommt ihr?</label>
+            <label for="attending">Kommt ihr?</label>
             <select name="attending" id="attending" required>
               <option value="">Bitte wählen</option>
               <option value="yes">Ja</option>
@@ -86,13 +87,13 @@
           </div>
         </div>
 
-        <label>Anzahl Personen</label>
+        <label for="guestCount">Anzahl Personen</label>
         <input name="guestCount" id="guestCount" type="number" min="1" placeholder="z. B. 2"/>
 
-        <label>Musikwünsche 🎶</label>
+        <label for="musicWishes">Musikwünsche 🎶</label>
         <textarea name="musicWishes" id="musicWishes" placeholder="Was darf auf keinen Fall fehlen?"></textarea>
 
-        <label>Essen & Unverträglichkeiten 🍽️</label>
+        <label for="dietaryRestrictions">Essen & Unverträglichkeiten 🍽️</label>
         <textarea name="dietaryRestrictions" id="dietaryRestrictions" placeholder="Vegetarisch, vegan, Allergien …"></textarea>
 
         <button type="submit" id="submitBtn">Antwort senden</button>
@@ -108,7 +109,6 @@
   <p>Wir freuen uns auf euch 💖</p>
 </footer>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
 <script src="script.js"></script>
 
 </body>

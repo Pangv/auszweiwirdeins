@@ -18,7 +18,7 @@ function initMaps() {
     try {
       // Standesamt Karte
       const mapStandesamt = L.map('mapStandesamt', {
-        center: [51.9606649, 7.6261347],
+        center: [51.965361, 7.632631],
         zoom: 16,
         scrollWheelZoom: false
       });
@@ -28,15 +28,15 @@ function initMaps() {
         maxZoom: 19
       }).addTo(mapStandesamt);
       
-      const markerStandesamt = L.marker([51.9606649, 7.6261347]).addTo(mapStandesamt);
-      markerStandesamt.bindPopup('<b>Standesamt Münster</b><br>Hörsterstraße 28<br>48143 Münster<br><a href="https://www.openstreetmap.org/?mlat=51.9606649&mlon=7.6261347#map=17/51.9606649/7.6261347" target="_blank">📍 Navigation öffnen</a>');
+      const markerStandesamt = L.marker([51.965361, 7.632631]).addTo(mapStandesamt);
+      markerStandesamt.bindPopup('<b>Standesamt Münster</b><br>Hörsterstraße 28<br>48143 Münster<br><a href="https://www.openstreetmap.org/way/171110687#map=19/51.965361/7.632631" target="_blank">📍 Navigation öffnen</a>');
       
       // Karte neu berechnen
       mapStandesamt.invalidateSize();
       
       // Yolk Karte
       const mapYolk = L.map('mapYolk', {
-        center: [51.9485, 7.6095],
+        center: [51.953652, 7.653281],
         zoom: 16,
         scrollWheelZoom: false
       });
@@ -46,8 +46,8 @@ function initMaps() {
         maxZoom: 19
       }).addTo(mapYolk);
       
-      const markerYolk = L.marker([51.9485, 7.6095]).addTo(mapYolk);
-      markerYolk.bindPopup('<b>Yolk</b><br>Bennostraße 5<br>48155 Münster<br><a href="https://www.openstreetmap.org/?mlat=51.9485&mlon=7.6095#map=17/51.9485/7.6095" target="_blank">📍 Navigation öffnen</a>');
+      const markerYolk = L.marker([51.953652, 7.653281]).addTo(mapYolk);
+      markerYolk.bindPopup('<b>Yolk</b><br>Bennostraße 5<br>48155 Münster<br><a href="https://www.openstreetmap.org/#map=18/51.953652/7.653281" target="_blank">📍 Navigation öffnen</a>');
       
       // Karte neu berechnen
       mapYolk.invalidateSize();
