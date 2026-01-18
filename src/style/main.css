@@ -1,0 +1,13 @@
+@import url(https://fonts.bunny.net/css?family=big-shoulders-display:500,800|manjari:400,700);
+@import "tailwindcss";
+
+
+body {
+  font-family: 'manjari', sans-serif;
+  background-color: #E9E6D1
+}
+
+h1, h2, .font-display {
+  font-family: 'big-shoulders-display', sans-serif;
+  text-transform: uppercase
+}

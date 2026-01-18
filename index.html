@@ -1,115 +1,17 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Unsere Hochzeit – 30.07.2026</title>
-  <link rel="stylesheet" href="leaflet.css">
-  <link rel="stylesheet" href="styles.css">
-  <script src="leaflet.js"></script>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sarah & Olli - Hochzeit</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
 </head>
-
 <body>
-
-<header>
-  <h1>Wir heiraten! 🎉</h1>
-  <p>30. Juli 2026 · Standesamt & Feier im Yolk · Münster</p>
-  <p><strong>Motto: bunt</strong></p>
-</header>
-
-<main>
-
-  <section>
-    <h2>💍 Ablauf</h2>
-    <div class="card">
-      <p><strong>Datum:</strong> 30.07.2026</p>
-      <p><strong>Standesamt:</strong> tagsüber (Details folgen)</p>
-      <p>📍 Hörsterstraße 28, 48143 Münster</p>
-      <div id="mapStandesamt" class="map"></div>
-      <p style="margin-top: 1rem;"><strong>Feier:</strong> abends im <strong>Yolk, Münster</strong></p>
-      <p>📍 Bennostraße 5, 48155 Münster</p>
-      <div id="mapYolk" class="map"></div>
-    </div>
-  </section>
-
-  <section>
-    <h2>🏨 Hotelempfehlungen</h2>
-    <div class="grid grid-2">
-      <div class="card">
-        <strong>ATLANTIC Hotel Münster</strong>
-        <p>Zentral, modern, fußläufig</p>
-      </div>
-      <div class="card">
-        <strong>Motel One Münster</strong>
-        <p>Stylisch & preiswert</p>
-      </div>
-      <div class="card">
-        <strong>H4 Hotel Münster</strong>
-        <p>Direkt am Bahnhof</p>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2>❓ FAQ</h2>
-    <div class="card">
-      <div class="faq-item">
-        <strong>Dresscode?</strong>
-        <p>Bunt! Alles ist erlaubt – je farbenfroher, desto besser.</p>
-      </div>
-      <div class="faq-item">
-        <strong>Kinder?</strong>
-        <p>Ja, sehr gerne.</p>
-      </div>
-      <div class="faq-item">
-        <strong>Geschenke?</strong>
-        <p>Eure Anwesenheit ist das größte Geschenk.</p>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2>📝 Rückmeldung</h2>
-    <div class="card">
-      <form id="rsvpForm" onsubmit="handleSubmit(event)">
-        <div class="grid grid-2">
-          <div>
-            <label for="guestName">Name</label>
-            <input name="name" id="guestName" required />
-          </div>
-          <div>
-            <label for="attending">Kommt ihr?</label>
-            <select name="attending" id="attending" required>
-              <option value="">Bitte wählen</option>
-              <option value="yes">Ja</option>
-              <option value="no">Nein</option>
-            </select>
-          </div>
-        </div>
-
-        <label for="guestCount">Anzahl Personen</label>
-        <input name="guestCount" id="guestCount" type="number" min="1" placeholder="z. B. 2"/>
-
-        <label for="musicWishes">Musikwünsche 🎶</label>
-        <textarea name="musicWishes" id="musicWishes" placeholder="Was darf auf keinen Fall fehlen?"></textarea>
-
-        <label for="dietaryRestrictions">Essen & Unverträglichkeiten 🍽️</label>
-        <textarea name="dietaryRestrictions" id="dietaryRestrictions" placeholder="Vegetarisch, vegan, Allergien …"></textarea>
-
-        <button type="submit" id="submitBtn">Antwort senden</button>
-      </form>
-
-      <div id="statusMessage" style="margin-top:1rem;padding:1rem;border-radius:8px;display:none;"></div>
-    </div>
-  </section>
-
-</main>
-
-<footer>
-  <p>Wir freuen uns auf euch 💖</p>
-</footer>
-
-<script src="script.js"></script>
-
+<div id="app"></div>
+<script type="module" src="/src/main.ts"></script>
 </body>
 </html>
