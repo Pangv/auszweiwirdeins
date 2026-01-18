@@ -2,7 +2,7 @@ content:
   - name: hotels
     label: Hotel Empfehlungen
     path: src/data/hotels.json
-    type: list
+    type: collection
     fields:
       - name: name
         label: Name
