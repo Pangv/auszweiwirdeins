@@ -1,24 +1,28 @@
 backend:
   name: github
-  repo: pangv/auszweiwirdeins # Ersetze dies durch dein tatsächliches Repo
+  repo: pangv/auszweiwirdeins
   branch: main
-  base_url: sveltia-cms-auth.sven-oliverpaetzel.workers.dev # Deine neue Worker-URL
+  base_url: https://sveltia-cms-auth.sven-oliverpaetzel.workers.dev # Hinzugefügt: https://
 
-media_folder: "public/images/uploads" # Wo Bilder gespeichert werden
+media_folder: "public/images/uploads"
 public_folder: "/images/uploads"
 
 collections:
-  - name: "hotels"
+  - name: "hotels_collection" # Eindeutiger Name für die Collection
     label: "Hotel Empfehlungen"
-    file: "src/data/hotels.json" # Pfad zu deiner JSON-Datei
-    fields:
-      - label: "Hotels"
-        name: "hotels"
-        widget: "list"
+    files:
+      - label: "Alle Hotels"
+        name: "hotels_list"
+        file: "src/data/hotels.json"
         fields:
-          - { label: "Name", name: "name", widget: "string" }
-          - { label: "Bild", name: "image", widget: "image" }
-          - { label: "Adresse", name: "address", widget: "string" }
-          - { label: "Preisspanne", name: "price", widget: "string" }
-          - { label: "Entfernung", name: "distance", widget: "text" }
-          - { label: "Beschreibung", name: "description", widget: "text" }
+          - label: "Hotels"
+            name: "hotels"
+            widget: "list"
+            summary: "{{name}}"
+            fields:
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Bild", name: "image", widget: "image" }
+              - { label: "Adresse", name: "address", widget: "string" }
+              - { label: "Preisspanne", name: "price", widget: "string" }
+              - { label: "Entfernung", name: "distance", widget: "text" }
+              - { label: "Beschreibung", name: "description", widget: "text" }
