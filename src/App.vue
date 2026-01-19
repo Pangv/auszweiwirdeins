@@ -156,13 +156,8 @@ const hotels = hotelData.hotels
 
         <p>Beschreibung</p>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A alias culpa cum delectus, distinctio ea earum eligendi esse eum, fuga illo labore libero minus non, sed sit suscipit tempore vero!</p>
-
       </div>
-
-
     </div>
-
-
   </section>
 
   <section>

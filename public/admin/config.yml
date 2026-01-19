@@ -2,6 +2,7 @@ backend:
   name: github
   repo: pangv/auszweiwirdeins # Ersetze dies durch dein tatsächliches Repo
   branch: main
+  base_url: sveltia-cms-auth.sven-oliverpaetzel.workers.dev # Deine neue Worker-URL
 
 media_folder: "public/images/uploads" # Wo Bilder gespeichert werden
 public_folder: "/images/uploads"
