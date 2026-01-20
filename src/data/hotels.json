@@ -6,7 +6,9 @@
       "address": "Engelstraße 39, 48143 Münster",
       "price": "160€ - 280€",
       "distance": "Standesamt: 1,2 km\nCafe Yolk: 2,0 km",
-      "description": "Modernes Hotel direkt am Bahnhof mit einer tollen Rooftop-Bar für den Absacker nach der Feier."
+      "description": "Modernes Hotel direkt am Bahnhof mit einer tollen Rooftop-Bar für den Absacker nach der Feier.",
+      "link": "https://www.atlantic-hotel.de/",
+      "linkText": "Atlantic Hotel"
     },
     {
       "name": "Factory Hotel",
@@ -14,7 +16,19 @@
       "address": "An der Germania Brauerei 5, 48159 Münster",
       "price": "120€ - 190€",
       "distance": "Standesamt: 2,5 km\nCafe Yolk: 3,5 km",
-      "description": "Stylisches Hotel in einer alten Brauerei. Perfekt für alle, die es etwas industrieller und hipper mögen."
+      "description": "Stylisches Hotel in einer alten Brauerei. Perfekt für alle, die es etwas industrieller und hipper mögen.",
+      "link": "https://www.factoryhotel.de/",
+      "linkText": "Factory Hotel"
+    },
+    {
+      "name": "Novotel",
+      "image": "https://images.unsplash.com/photo-1517840901100-8179e982acb7?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "address": "Hauptstraße 1",
+      "price": "60 - 90 €",
+      "distance": "Standesamt 3 km\nYolk 1,5 km",
+      "description": "Einfach Novotel",
+      "link": "https://www.novotel.de/de/hotel-mueller-strasse-1-muenster/hotel-mueller-strasse-1-muenster",
+      "linkText": "Novotel"
     }
   ]
 }

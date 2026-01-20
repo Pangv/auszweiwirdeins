@@ -26,3 +26,5 @@ collections:
               - { label: "Preisspanne", name: "price", widget: "string" }
               - { label: "Entfernung", name: "distance", widget: "text" }
               - { label: "Beschreibung", name: "description", widget: "text" }
+              - { label: "Link", name: "link", widget: "text" }
+              - { label: "Link-Text", name: "linkText", widget: "text" }

@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
-import './maps.ts'
+// import './maps.ts'
 
 import "./style/main.css"
 
