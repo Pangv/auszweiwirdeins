@@ -7,8 +7,6 @@ import initMaps from './maps'
 import Teilnahme from "./Teilnahme.vue";
 import HotelSuggestions from "./HotelSuggestions.vue";
 
-const hotels = hotelData.hotels
-
 onMounted(() => {
   initMaps()
 })

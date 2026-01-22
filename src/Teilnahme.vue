@@ -1,8 +1,17 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
+import { auth, db } from './firebase'
+import { signInAnonymously, onAuthStateChanged } from 'firebase/auth'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
 
 const guestCount = ref(1)
 const names = ref<string[]>([''])
+const message = ref('')
+const musicNoGo = ref('')
+const loading = ref(true)
+const saving = ref(false)
+const statusMessage = ref('')
+const userId = ref<string | null>(null)
 
 // Reagiert auf Änderungen der Gästeanzahl und passt das Namens-Array an
 watch(guestCount, (newCount) => {
@@ -18,6 +27,68 @@ watch(guestCount, (newCount) => {
   }
   names.value = currentNames
 })
+
+const loadUserData = async (uid: string) => {
+  try {
+    const docRef = doc(db, 'responses', uid)
+    const docSnap = await getDoc(docRef)
+
+    if (docSnap.exists()) {
+      const data = docSnap.data()
+      guestCount.value = data.guestCount || 1
+      names.value = data.names || ['']
+      message.value = data.message || ''
+      musicNoGo.value = data.musicNoGo || ''
+      statusMessage.value = 'Deine bisherige Anmeldung wurde geladen.'
+    }
+  } catch (error) {
+    console.error('Fehler beim Laden der Daten:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      userId.value = user.uid
+      await loadUserData(user.uid)
+    } else {
+      try {
+        const userCredential = await signInAnonymously(auth)
+        userId.value = userCredential.user.uid
+        loading.value = false
+      } catch (error) {
+        console.error('Anonyme Anmeldung fehlgeschlagen:', error)
+        statusMessage.value = 'Anmeldung fehlgeschlagen. Bitte versuche es später erneut.'
+        loading.value = false
+      }
+    }
+  })
+})
+
+const handleSubmit = async () => {
+  if (!userId.value) return
+
+  saving.value = true
+  statusMessage.value = 'Wird gespeichert...'
+
+  try {
+    await setDoc(doc(db, 'responses', userId.value), {
+      guestCount: guestCount.value,
+      names: names.value,
+      message: message.value,
+      musicNoGo: musicNoGo.value,
+      updatedAt: new Date().toISOString()
+    })
+    statusMessage.value = 'Anmeldung erfolgreich gespeichert!'
+  } catch (error) {
+    console.error('Fehler beim Speichern:', error)
+    statusMessage.value = 'Fehler beim Speichern. Bitte versuche es erneut.'
+  } finally {
+    saving.value = false
+  }
+}
 </script>
 
 <template>
@@ -29,8 +100,12 @@ watch(guestCount, (newCount) => {
            class="rounded-3xl"
            alt="Drinks">
     </div>
-    <div class="bg-[#F2EBDC] p-8 rounded-3xl shadow-sm border-2">
-      <form id="rsvpForm" class="space-y-4">
+    <div class="bg-[#F2EBDC] p-8 rounded-3xl shadow-sm border-2 relative">
+      <div v-if="loading" class="absolute inset-0 bg-white/50 flex items-center justify-center z-10 rounded-3xl">
+        <p class="font-bold">Lade Daten...</p>
+      </div>
+
+      <form id="rsvpForm" class="space-y-4" @submit.prevent="handleSubmit">
         <div>
           <label for="guests" class="block text-sm font-bold mb-1">PERSONENANZAHL</label>
           <input type="number" id="guests" v-model.number="guestCount" min="1"
@@ -48,22 +123,25 @@ watch(guestCount, (newCount) => {
 
         <div>
           <label for="message" class="block text-sm font-bold mb-1">NACHRICHT AN UNS (Z.B. ALLERGIEN, Vegetarisch, Vegan)</label>
-          <textarea id="message" placeholder="Deine Nachricht..."
+          <textarea id="message" v-model="message" placeholder="Deine Nachricht..."
                     class="w-full p-3 border border-coral rounded bg-transparent h-32 focus:ring-2 focus:ring-coral outline-none"></textarea>
         </div>
 
         <div>
           <label for="message2" class="block text-sm font-bold mb-1">MUSIK NO GOES</label>
-          <textarea id="message2" placeholder="Was sollen wir gar nicht spielen?"
+          <textarea id="message2" v-model="musicNoGo" placeholder="Was sollen wir gar nicht spielen?"
                     class="w-full p-3 border border-coral rounded bg-transparent h-32 focus:ring-2 focus:ring-coral outline-none"></textarea>
         </div>
 
         <button type="submit"
-                class="w-full bg-coral text-white py-4 rounded font-bold uppercase hover:bg-red-500 transition-colors">
-          Abschicken
+                :disabled="saving || loading"
+                class="w-full bg-coral text-white py-4 rounded font-bold uppercase hover:bg-red-500 transition-colors disabled:opacity-50">
+          {{ saving ? 'Wird gespeichert...' : 'Abschicken' }}
         </button>
       </form>
-      <p id="status" class="mt-4 font-bold text-center"></p>
+      <p id="status" class="mt-4 font-bold text-center" :class="{'text-green-600': statusMessage.includes('erfolgreich'), 'text-red-600': statusMessage.includes('Fehler')}">
+        {{ statusMessage }}
+      </p>
     </div>
   </section>
 </template>
