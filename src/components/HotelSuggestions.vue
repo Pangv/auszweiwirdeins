@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import hotelData from './data/hotels.json'
+import hotelData from '../data/hotels.json'
 const hotels = hotelData.hotels
 
 </script>
 
 <template>
-  <section class="py-20 px-6 md:px-12 ">
-    <div class="max-w-7xl mx-auto">
+  <section class="py-10 px-2 md:px-12 md:py-20 text-left">
+    <div class="mx-auto">
       <h2
-          class="fancy text-6xl md:text-7xl font-extrabold rounded-3xl p-2  mb-12 w-fit font-display">
+          class="fancy text-[clamp(2rem,10vw,6rem)] font-extrabold rounded-3xl p-2 mb-12 w-fit font-display text-left">
         Hotel Empfehlungen
       </h2>
 

@@ -31,7 +31,9 @@ h1, h2, .font-display {
 
 .fancy {
   position: relative;
-  white-space: nowrap;
+  width: fit-content;
+  max-width: 100%;
+  text-align: left;
   &:after {
     --deco-height: 0.3125em;
     content: "";

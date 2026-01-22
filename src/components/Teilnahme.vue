@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
-import { auth, db } from './firebase'
+import { auth, db } from './../firebase'
 import { signInAnonymously, onAuthStateChanged } from 'firebase/auth'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 
@@ -92,15 +92,15 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <section class="grid md:grid-cols-2 gap-12 py-20 px-6 md:px-12 ">
-    <div>
-      <h2 class="text-7xl mb-6">Bist du dabei?</h2>
-      <p class="mb-6">Bitte melde dich über das Kontaktformular rechts an.</p>
+  <section class="grid md:grid-cols-2 gap-12 py-10 md:py-20 px-6 md:px-12 text-left bg-secondary">
+    <div class="flex flex-col justify-center">
+      <h2 class="text-[clamp(2.5rem,10vw,6rem)] font-extrabold mb-6 leading-none text-left lighter">Bist du dabei?</h2>
+      <p class="mb-8 text-lg">Bitte melde dich über das Kontaktformular rechts an.</p>
       <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=500"
-           class="rounded-3xl"
+           class="rounded-3xl shadow-xl w-full object-cover h-64 md:h-96"
            alt="Drinks">
     </div>
-    <div class="bg-[#F2EBDC] p-8 rounded-3xl shadow-sm border-2 relative">
+    <div class="bg-primary/5 p-8 rounded-3xl shadow-sm border-2 border-primary/10 relative">
       <div v-if="loading" class="absolute inset-0 bg-white/50 flex items-center justify-center z-10 rounded-3xl">
         <p class="font-bold">Lade Daten...</p>
       </div>
