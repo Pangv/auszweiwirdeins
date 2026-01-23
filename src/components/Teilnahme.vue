@@ -6,6 +6,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore'
 
 const guestCount = ref(1)
 const names = ref<string[]>([''])
+const attending = ref<'yes' | 'no'>('yes')
 const message = ref('')
 const musicNoGo = ref('')
 const loading = ref(true)
@@ -37,6 +38,7 @@ const loadUserData = async (uid: string) => {
       const data = docSnap.data()
       guestCount.value = data.guestCount || 1
       names.value = data.names || ['']
+      attending.value = data.attending || 'yes'
       message.value = data.message || ''
       musicNoGo.value = data.musicNoGo || ''
       statusMessage.value = 'Deine bisherige Anmeldung wurde geladen.'
@@ -77,6 +79,7 @@ const handleSubmit = async () => {
     await setDoc(doc(db, 'responses', userId.value), {
       guestCount: guestCount.value,
       names: names.value,
+      attending: attending.value,
       message: message.value,
       musicNoGo: musicNoGo.value,
       updatedAt: new Date().toISOString()
@@ -106,17 +109,35 @@ const handleSubmit = async () => {
       </div>
 
       <form id="rsvpForm" class="space-y-4" @submit.prevent="handleSubmit">
-        <div>
+        <div class="flex gap-4 mb-4">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" v-model="attending" value="yes" class="accent-coral w-5 h-5">
+            <span class="font-bold">ICH KOMME</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" v-model="attending" value="no" class="accent-coral w-5 h-5">
+            <span class="font-bold">ICH KANN LEIDER NICHT</span>
+          </label>
+        </div>
+
+        <div v-if="attending === 'yes'">
           <label for="guests" class="block text-sm font-bold mb-1">PERSONENANZAHL</label>
           <input type="number" id="guests" v-model.number="guestCount" min="1"
                  class="w-full p-3 border border-coral rounded bg-transparent focus:ring-2 focus:ring-coral outline-none">
         </div>
 
-        <div v-for="(_, index) in guestCount" :key="index">
+        <div v-if="attending === 'yes'" v-for="(_, index) in guestCount" :key="index">
           <label :for="'name-' + index" class="block text-sm font-bold mb-1">
             NAME {{ guestCount > 1 ? (index + 1) : '' }}
           </label>
           <input type="text" :id="'name-' + index" v-model="names[index]" :placeholder="'NAME'"
+                 class="w-full p-3 border border-coral rounded bg-transparent focus:ring-2 focus:ring-coral outline-none"
+                 required>
+        </div>
+
+        <div v-if="attending === 'no'">
+          <label for="name-absage" class="block text-sm font-bold mb-1">NAME</label>
+          <input type="text" id="name-absage" v-model="names[0]" placeholder="DEIN NAME"
                  class="w-full p-3 border border-coral rounded bg-transparent focus:ring-2 focus:ring-coral outline-none"
                  required>
         </div>
@@ -127,7 +148,7 @@ const handleSubmit = async () => {
                     class="w-full p-3 border border-coral rounded bg-transparent h-32 focus:ring-2 focus:ring-coral outline-none"></textarea>
         </div>
 
-        <div>
+        <div v-if="attending === 'yes'">
           <label for="message2" class="block text-sm font-bold mb-1">MUSIK NO GOES</label>
           <textarea id="message2" v-model="musicNoGo" placeholder="Was sollen wir gar nicht spielen?"
                     class="w-full p-3 border border-coral rounded bg-transparent h-32 focus:ring-2 focus:ring-coral outline-none"></textarea>
