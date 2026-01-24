@@ -17,12 +17,11 @@
         </div>
       </div>
     </div>
-    <div class="grid lg:grid-cols-2 gap-12 items-start md:order-1">
-      <div class="grid md:grid-cols-2 gap-8">
-        <div class="relative border-l-2 border-coral/50 ml-4 pl-8 space-y-12">
+    <div class="items-start md:order-1 flex">
+        <div class="relative border-l-2 border-coral/50 ml-4 pl-8 space-y-12 flex flex-col justify-around h-full">
           <div class="relative">
             <div
-              class="absolute -left-10.25 top-1 w-4 h-4 rounded-full bg-coral shadow-[0_0_10px_#FF6B6B]"></div>
+              class="absolute -left-10.25 top-1 w-4 h-4 rounded-full bg-accent shadow-[0_0_10px_#FF6B6B]"></div>
             <p class="text-coral font-bold tracking-widest uppercase text-sm">14:00 Uhr</p>
             <h3 class="text-2xl font-display uppercase">Standesamt</h3>
             <p class="text-sm opacity-70">Trauung im kleinen Kreis (Details folgen)</p>
@@ -51,7 +50,6 @@
               )</p>
           </div>
         </div>
-      </div>
     </div>
   </section>
 </template>

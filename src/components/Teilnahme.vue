@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
-import { auth, db } from './../firebase'
-import { signInAnonymously, onAuthStateChanged } from 'firebase/auth'
-import { doc, getDoc, setDoc } from 'firebase/firestore'
+import {ref, watch, onMounted} from 'vue'
+import {auth, db} from './../firebase'
+import {signInAnonymously, onAuthStateChanged} from 'firebase/auth'
+import {doc, getDoc, setDoc} from 'firebase/firestore'
 
 const guestCount = ref(1)
 const names = ref<string[]>([''])
@@ -97,14 +97,20 @@ const handleSubmit = async () => {
 <template>
   <section class="grid md:grid-cols-2 gap-12 py-10 md:py-20 px-6 md:px-12 text-left bg-secondary">
     <div class="flex flex-col justify-center">
-      <h2 class="text-[clamp(2.5rem,10vw,6rem)] font-extrabold mb-6 leading-none text-left lighter">Bist du dabei?</h2>
-      <p class="mb-8 text-lg">Bitte melde dich über das Kontaktformular rechts an.</p>
-      <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=500"
-           class="rounded-3xl shadow-xl w-full object-cover h-64 md:h-96"
-           alt="Drinks">
+      <h2 class="text-[clamp(2.5rem,10vw,6rem)] font-extrabold mb-6 leading-none text-left lighter">
+        Bist du dabei?</h2>
+      <p class="mb-8 text-lg">Bitte melde dich über das Kontaktformular an.</p>
+      <div class="relative">
+        <div
+          class="absolute -inset-4 border-4 bg-accent border-accent/60 rounded-3xl rotate-2"></div>
+        <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=500"
+             class="rounded-3xl shadow-xl w-full object-cover h-64 md:h-96 -rotate-4 object-cover hover:scale-105 transition-transform duration-500"
+             alt="Drinks">
+      </div>
     </div>
     <div class="bg-primary/5 p-8 rounded-3xl shadow-sm border-2 border-primary/10 relative">
-      <div v-if="loading" class="absolute inset-0 bg-white/50 flex items-center justify-center z-10 rounded-3xl">
+      <div v-if="loading"
+           class="absolute inset-0 bg-white/50 flex items-center justify-center z-10 rounded-3xl">
         <p class="font-bold">Lade Daten...</p>
       </div>
 
@@ -140,27 +146,31 @@ const handleSubmit = async () => {
           <input type="text" id="name-absage" v-model="names[0]" placeholder="DEIN NAME"
                  class="w-full p-3 border border-coral rounded bg-transparent focus:ring-2 focus:ring-coral outline-none"
                  required>
+
         </div>
 
-        <div>
-          <label for="message" class="block text-sm font-bold mb-1">NACHRICHT AN UNS (Z.B. ALLERGIEN, Vegetarisch, Vegan)</label>
-          <textarea id="message" v-model="message" placeholder="Deine Nachricht..."
-                    class="w-full p-3 border border-coral rounded bg-transparent h-32 focus:ring-2 focus:ring-coral outline-none"></textarea>
-        </div>
 
         <div v-if="attending === 'yes'">
           <label for="message2" class="block text-sm font-bold mb-1">MUSIK NO GOES</label>
-          <textarea id="message2" v-model="musicNoGo" placeholder="Was sollen wir gar nicht spielen?"
+          <textarea id="message2" v-model="musicNoGo"
+                    placeholder="Was sollen wir gar nicht spielen?"
                     class="w-full p-3 border border-coral rounded bg-transparent h-32 focus:ring-2 focus:ring-coral outline-none"></textarea>
+          <div>
+            <label for="message" class="block text-sm font-bold mb-1">NACHRICHT AN UNS (Z.B.
+              ALLERGIEN, Vegetarisch, Vegan)</label>
+            <textarea id="message" v-model="message" placeholder="Deine Nachricht..."
+                      class="w-full p-3 border border-coral rounded bg-transparent h-32 focus:ring-2 focus:ring-coral outline-none"></textarea>
+          </div>
         </div>
 
         <button type="submit"
                 :disabled="saving || loading"
-                class="w-full bg-coral text-white py-4 rounded font-bold uppercase hover:bg-red-500 transition-colors disabled:opacity-50">
+                class="w-full bg-accent text-white py-4 rounded font-bold uppercase hover:bg-red-500 transition-colors disabled:opacity-50">
           {{ saving ? 'Wird gespeichert...' : 'Abschicken' }}
         </button>
       </form>
-      <p id="status" class="mt-4 font-bold text-center" :class="{'text-green-600': statusMessage.includes('erfolgreich'), 'text-red-600': statusMessage.includes('Fehler')}">
+      <p id="status" class="mt-4 font-bold text-center"
+         :class="{'text-green-600': statusMessage.includes('erfolgreich'), 'text-red-600': statusMessage.includes('Fehler')}">
         {{ statusMessage }}
       </p>
     </div>

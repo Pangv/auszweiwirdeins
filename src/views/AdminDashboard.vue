@@ -66,9 +66,13 @@ const formatDate = (dateString: string) => {
     <div class="max-w-7xl mx-auto">
       <div class="flex justify-between items-end mb-12">
         <div>
-          <h1 class="text-5xl md:text-7xl font-extrabold darker leading-none">Admin Dashboard</h1>
+          <h1 class="text-5xl md:text-7xl font-extrabold darker leading-none">Unsere Gäste</h1>
           <p class="text-xl mt-4 opacity-80 uppercase font-bold text-accent">Anmeldungen & Rückmeldungen</p>
         </div>
+
+        <a href="/" class="bg-coral text-white px-6 py-2 rounded font-bold uppercase hover:bg-red-500 transition-colors">
+          Zurück
+        </a>
         <button @click="handleLogout" class="bg-coral text-white px-6 py-2 rounded font-bold uppercase hover:bg-red-500 transition-colors">
           Abmelden
         </button>
@@ -83,15 +87,15 @@ const formatDate = (dateString: string) => {
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div class="bg-secondary p-8 rounded-3xl shadow-lg border-2 border-accent/20">
             <h3 class="text-sm font-bold uppercase text-accent mb-2">Gesamtzusagen (Personen)</h3>
-            <p class="text-5xl font-extrabold darker">{{ totalGuests }}</p>
+            <p class="text-5xl font-extrabold">{{ totalGuests }}</p>
           </div>
           <div class="bg-secondary p-8 rounded-3xl shadow-lg border-2 border-accent/20">
             <h3 class="text-sm font-bold uppercase text-accent mb-2">Anzahl Zusagen (Formulare)</h3>
-            <p class="text-5xl font-extrabold darker">{{ groupedResponses.zusagen.length }}</p>
+            <p class="text-5xl font-extrabold">{{ groupedResponses.zusagen.length }}</p>
           </div>
           <div class="bg-secondary p-8 rounded-3xl shadow-lg border-2 border-accent/20">
             <h3 class="text-sm font-bold uppercase text-accent mb-2">Anzahl Absagen</h3>
-            <p class="text-5xl font-extrabold darker">{{ groupedResponses.absagen.length }}</p>
+            <p class="text-5xl font-extrabold">{{ groupedResponses.absagen.length }}</p>
           </div>
         </div>
 
@@ -102,7 +106,7 @@ const formatDate = (dateString: string) => {
             <div v-for="res in groupedResponses.zusagen" :key="res.id" class="bg-secondary p-6 rounded-2xl shadow-md border-l-8 border-green-500">
               <div class="flex flex-wrap justify-between items-start gap-4 mb-4">
                 <div>
-                  <h3 class="text-2xl font-bold darker">{{ res.names.join(', ') }}</h3>
+                  <h3 class="text-2xl font-bold ">{{ res.names.join(', ') }}</h3>
                   <p class="text-accent font-bold uppercase text-sm">{{ res.guestCount }} Person(en)</p>
                 </div>
                 <div class="text-right">
@@ -131,7 +135,7 @@ const formatDate = (dateString: string) => {
             <div v-for="res in groupedResponses.absagen" :key="res.id" class="bg-secondary p-6 rounded-2xl shadow-md border-l-8 border-gray-400 opacity-80">
               <div class="flex flex-wrap justify-between items-start gap-4 mb-4">
                 <div>
-                  <h3 class="text-2xl font-bold darker">{{ res.names[0] }}</h3>
+                  <h3 class="text-2xl font-bold">{{ res.names.join(', ') }}</h3>
                 </div>
                 <div class="text-right">
                   <p class="text-xs opacity-60 font-mono">{{ formatDate(res.updatedAt) }}</p>
