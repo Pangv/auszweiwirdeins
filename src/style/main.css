@@ -1,6 +1,9 @@
 @import url(https://fonts.bunny.net/css?family=big-shoulders-display:500,800|manjari:400,700);
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   font-family: 'manjari', sans-serif;

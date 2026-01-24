@@ -95,7 +95,7 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <section class="grid md:grid-cols-2 gap-12 py-10 md:py-20 px-6 md:px-12 text-left bg-secondary">
+  <section id="teilnahme" class="grid md:grid-cols-2 gap-12 py-10 md:py-20 px-6 md:px-12 text-left bg-secondary">
     <div class="flex flex-col justify-center">
       <h2 class="text-[clamp(2.5rem,10vw,6rem)] font-extrabold mb-6 leading-none text-left lighter">
         Bist du dabei?</h2>

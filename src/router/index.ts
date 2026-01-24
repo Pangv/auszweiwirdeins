@@ -21,8 +21,31 @@ const router = createRouter({
       name: 'admin',
       component: () => import('../views/AdminDashboard.vue'),
       meta: { requiresAuth: true }
+    },
+    {
+      path: '/impressum',
+      name: 'imprint',
+      component: () => import('../views/Imprint.vue')
+    },
+    {
+      path: '/datenschutz',
+      name: 'privacy',
+      component: () => import('../views/Privacy.vue')
     }
   ],
+  scrollBehavior(to, from, savedPosition) {
+    // if (savedPosition) return savedPosition;
+
+    if (to.hash) {
+      return {
+        el: to.hash,
+        behavior: "smooth",
+        top: 0, // optionaler Offset (s.u.)
+      };
+    }
+
+    return {top: 0};
+  }
 })
 
 // Navigation Guard

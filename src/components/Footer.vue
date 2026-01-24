@@ -14,10 +14,10 @@
           <a href="mailto:hello@auszweiwirdeins.de">hello@auszweiwirdeins.de</a>
         </div>
         <div>
-          <a href="">Impressum</a>
+          <RouterLink to="/impressum">Impressum</RouterLink>
         </div>
         <div>
-          <a href="">Datenschutz</a>
+          <RouterLink to="/datenschutz">Datenschutz</RouterLink>
         </div>
       </div>
     </div>

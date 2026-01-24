@@ -12,9 +12,10 @@
       </div>
 
       <div class="mt-5 w-full">
-        <a role="button" class="bg-accent text-secondary py-2 px-4 rounded-full " href="#">Wir sagen
-          ja. Sag ja
-          mit uns!</a>
+        <p class="text-3xl text-center mb-5 fancy inline pr-3">Wir sagen ja!</p>
+        <RouterLink class="bg-accent mt-5 text-2xl text-secondary py-2 px-4" :to="{ path: '/', hash: '#teilnahme' }">
+          Sag ja mit uns!
+        </RouterLink>
       </div>
     </div>
     <div
