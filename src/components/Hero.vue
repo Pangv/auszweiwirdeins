@@ -12,7 +12,7 @@
       </div>
 
       <div class="mt-5 w-full">
-        <p class="text-3xl text-center mb-5 fancy inline pr-3">Wir sagen ja!</p>
+        <p class="text-3xl text-center mb-5 fancy xs:inline pr-3">Wir sagen ja!</p>
         <RouterLink class="bg-accent mt-5 text-2xl text-secondary py-2 px-4" :to="{ path: '/', hash: '#teilnahme' }">
           Sag ja mit uns!
         </RouterLink>
