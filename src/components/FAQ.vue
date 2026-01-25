@@ -2,9 +2,9 @@
 </script>
 
 <template>
-  <section class="py-10 md:py-20 px-6 md:px-12 text-left bg-primary text-secondary">
+  <section class="section-padding text-left bg-primary text-secondary">
     <div class="max-w-7xl mx-auto">
-      <h2 class="font-extrabold text-[clamp(2.5rem,10vw,6rem)] mb-12 text-left leading-none darker">FAQ</h2>
+      <h2 class="heading-huge mb-12 text-left text-secondary">FAQ</h2>
 
       <div class="grid md:grid-cols-2 gap-16 items-center">
         <div class="space-y-8">
@@ -31,10 +31,10 @@
           </div>
         </div>
 
-        <div class="hidden relative md:block">
-          <div class="absolute w-[90%] md:w-full -inset-4 border-4 bg-accent border-accent/60 rounded-3xl -rotate-2"></div>
+        <div class="hidden md:block card-decoration-container">
+          <div class="card-decoration-bg -rotate-2"></div>
           <img src="https://images.unsplash.com/photo-1542044801-30d3e45ae49a?q=80&w=1740&auto=format&fit=crop"
-               class="rounded-3xl w-[90%] md:w-full rotate-5 shadow-2xl relative z-10 w-full object-cover h-[500px] object-cover hover:scale-101 transition-transform duration-500"
+               class="card-image rotate-5 shadow-2xl relative z-10 h-125 hover:scale-101"
                alt="FAQ Dekoration">
         </div>
       </div>

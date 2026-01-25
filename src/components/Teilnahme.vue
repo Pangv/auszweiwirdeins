@@ -21,17 +21,15 @@ const isUsingManualCode = ref(false)
 
 // Reagiert auf Änderungen der Gästeanzahl und passt das Namens-Array an
 watch(guestCount, (newCount) => {
-  const currentNames = [...names.value]
-  if (newCount > currentNames.length) {
+  if (newCount > names.value.length) {
     // Füge leere Felder hinzu
-    for (let i = currentNames.length; i < newCount; i++) {
-      currentNames.push('')
+    for (let i = names.value.length; i < newCount; i++) {
+      names.value.push('')
     }
-  } else {
+  } else if (newCount < names.value.length) {
     // Kürze das Array, falls die Zahl verringert wird
-    currentNames.splice(newCount)
+    names.value.splice(newCount)
   }
-  names.value = currentNames
 })
 
 const loadUserData = async (uid: string) => {
@@ -41,13 +39,15 @@ const loadUserData = async (uid: string) => {
 
     if (docSnap.exists()) {
       const data = docSnap.data()
-      guestCount.value = data.guestCount || 1
-      names.value = data.names || ['']
-      attending.value = data.attending || 'yes'
-      message.value = data.message || ''
-      musicNoGo.value = data.musicNoGo || ''
-      editCode.value = data.editCode || ''
-      statusMessage.value = 'Deine bisherige Anmeldung wurde geladen.'
+      if (data) {
+        guestCount.value = data.guestCount || 1
+        names.value = Array.isArray(data.names) ? data.names : ['']
+        attending.value = data.attending || 'yes'
+        message.value = data.message || ''
+        musicNoGo.value = data.musicNoGo || ''
+        editCode.value = data.editCode || ''
+        statusMessage.value = 'Deine bisherige Anmeldung wurde geladen.'
+      }
     }
   } catch (error) {
     console.error('Fehler beim Laden der Daten:', error)
@@ -66,19 +66,24 @@ const loadByCode = async (code: string) => {
     const q = query(collection(db, 'responses'), where('editCode', '==', code.toUpperCase()))
     const querySnapshot = await getDocs(q)
 
-    if (!querySnapshot.empty) {
+    if (!querySnapshot.empty && querySnapshot.docs.length > 0) {
       const docSnap = querySnapshot.docs[0]
-      const data = docSnap.data()
-      userId.value = docSnap.id
-      guestCount.value = data.guestCount || 1
-      names.value = data.names || ['']
-      attending.value = data.attending || 'yes'
-      message.value = data.message || ''
-      musicNoGo.value = data.musicNoGo || ''
-      editCode.value = data.editCode || ''
-      isUsingManualCode.value = true
-      statusMessage.value = 'Anmeldung erfolgreich über Code geladen!'
-      return true
+      if (docSnap) {
+        const data = docSnap.data()
+        if (data) {
+          userId.value = docSnap.id
+          guestCount.value = data.guestCount || 1
+          names.value = Array.isArray(data.names) ? data.names : ['']
+          attending.value = data.attending || 'yes'
+          message.value = data.message || ''
+          musicNoGo.value = data.musicNoGo || ''
+          editCode.value = data.editCode || ''
+          isUsingManualCode.value = true
+          statusMessage.value = 'Anmeldung erfolgreich über Code geladen!'
+          return true
+        }
+      }
+      return false
     } else {
       statusMessage.value = 'Keine Anmeldung mit diesem Code gefunden.'
       return false
@@ -134,8 +139,10 @@ const handleSubmit = async () => {
 
     if (docSnap.exists()) {
       const existingData = docSnap.data()
-      createdAtValue = existingData.createdAt || createdAtValue
-      editCodeValue = existingData.editCode || editCodeValue
+      if (existingData) {
+        createdAtValue = existingData.createdAt || createdAtValue
+        editCodeValue = existingData.editCode || editCodeValue
+      }
     }
 
     await setDoc(docRef, {
@@ -161,16 +168,15 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <section id="teilnahme" class="grid md:grid-cols-2 gap-12 py-10 md:py-20 px-6 md:px-12 text-left bg-secondary">
+  <section id="teilnahme" class="grid md:grid-cols-2 gap-12 text-left bg-secondary section-padding">
     <div class="flex flex-col justify-center">
-      <h2 class="text-[clamp(2.5rem,10vw,6rem)] font-extrabold mb-6 leading-none text-left text-primary">
+      <h2 class="heading-huge mb-6 text-left text-primary">
         Bist du dabei?</h2>
       <p class="mb-8 text-lg">Bitte melde dich über das Kontaktformular an.</p>
-      <div class="relative">
-        <div
-          class="absolute w-[90%] md:w-full -inset-4  border-4 bg-accent border-accent/60 rounded-3xl rotate-2"></div>
+      <div class="card-decoration-container">
+        <div class="card-decoration-bg rotate-2"></div>
         <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=500"
-             class="rounded-3xl shadow-xl w-[90%] md:w-full object-cover h-64 md:h-96 -rotate-4 hover:scale-105 transition-transform duration-500"
+             class="card-image h-64 md:h-96 -rotate-4 hover:scale-105"
              alt="Drinks">
       </div>
     </div>
@@ -190,32 +196,32 @@ const handleSubmit = async () => {
 
         <div class="flex gap-4 mb-4">
           <label class="flex items-center gap-2 cursor-pointer">
-            <input type="radio" v-model="attending" value="yes" class="accent-coral w-5 h-5">
+            <input type="radio" v-model="attending" value="yes" class="accent-accent w-5 h-5">
             <span class="font-bold">ICH KOMME</span>
           </label>
           <label class="flex items-center gap-2 cursor-pointer">
-            <input type="radio" v-model="attending" value="no" class="accent-coral w-5 h-5">
+            <input type="radio" v-model="attending" value="no" class="accent-accent w-5 h-5">
             <span class="font-bold">ICH KANN LEIDER NICHT</span>
           </label>
         </div>
 
         <div v-if="attending === 'yes'">
-          <label for="guests" class="block text-sm font-bold mb-1">PERSONENANZAHL</label>
+          <label for="guests" class="form-label">PERSONENANZAHL</label>
           <input type="number" id="guests" v-model.number="guestCount" min="1"
                  class="form-input">
         </div>
 
-        <div v-if="attending === 'yes'" v-for="(_, index) in guestCount" :key="index">
-          <label :for="'name-' + index" class="block text-sm font-bold mb-1">
-            NAME {{ guestCount > 1 ? (index + 1) : '' }}
+        <div v-if="attending === 'yes'" v-for="i in guestCount" :key="i">
+          <label :for="'name-' + i" class="form-label">
+            NAME {{ guestCount > 1 ? i : '' }}
           </label>
-          <input type="text" :id="'name-' + index" v-model="names[index]" :placeholder="'NAME'"
+          <input type="text" :id="'name-' + i" v-model="names[i - 1]" :placeholder="'NAME'"
                  class="form-input"
                  required>
         </div>
 
         <div v-if="attending === 'no'">
-          <label for="name-absage" class="block text-sm font-bold mb-1">NAME</label>
+          <label for="name-absage" class="form-label">NAME</label>
           <input type="text" id="name-absage" v-model="names[0]" placeholder="DEIN NAME"
                  class="form-input"
                  required>
@@ -224,12 +230,12 @@ const handleSubmit = async () => {
 
 
         <div v-if="attending === 'yes'">
-          <label for="message2" class="block text-sm font-bold mb-1">MUSIK NO GOES</label>
+          <label for="message2" class="form-label">MUSIK NO GOES</label>
           <textarea id="message2" v-model="musicNoGo"
                     placeholder="Was sollen wir gar nicht spielen?"
                     class="form-input"></textarea>
           <div>
-            <label for="message" class="block text-sm font-bold mb-1">NACHRICHT AN UNS (Z.B.
+            <label for="message" class="form-label">NACHRICHT AN UNS (Z.B.
               ALLERGIEN, Vegetarisch, Vegan)</label>
             <textarea id="message" v-model="message" placeholder="Deine Nachricht..."
                       class="form-input"></textarea>
@@ -251,9 +257,9 @@ const handleSubmit = async () => {
         <p class="text-xs font-bold uppercase mb-2 opacity-50 text-center">Bereits angemeldet?</p>
         <div class="flex flex-col md:flex-row gap-2">
           <input type="text" v-model="manualCode" placeholder="8-stelliger Code"
-                 class="flex-1 m-1  p-2 border border-accent/50 rounded bg-transparent text-sm focus:ring-2 focus:ring-coral outline-none uppercase">
+                 class="flex-1 m-1  p-2 border border-accent/50 rounded bg-transparent text-sm focus:ring-2 focus:ring-accent outline-none uppercase">
           <button @click.prevent="loadByCode(manualCode)"
-                  class="bg-coral/20 text-coral px-4 py-2 rounded text-xs font-bold uppercase hover:bg-coral hover:text-white transition-colors">
+                  class="bg-accent/20 text-accent px-4 py-2 rounded text-xs font-bold uppercase hover:bg-accent hover:text-white transition-colors">
             Laden
           </button>
         </div>

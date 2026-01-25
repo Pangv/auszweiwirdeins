@@ -68,14 +68,14 @@ const formatDate = (dateString: string) => {
     <div class="max-w-7xl mx-auto">
       <div class="flex flex-wrap justify-between items-end mb-12">
         <div>
-          <h1 class="text-5xl md:text-7xl font-extrabold darker leading-none">Unsere Gäste</h1>
+          <h1 class="text-5xl md:text-7xl font-extrabold text-secondary leading-none">Unsere Gäste</h1>
           <p class="text-xl mt-4 opacity-80 uppercase font-bold text-accent">Anmeldungen & Rückmeldungen</p>
         </div>
 
-        <a href="/" class="bg-coral text-white px-6 py-2 rounded font-bold uppercase hover:bg-red-500 transition-colors">
+        <a href="/" class="bg-accent text-white px-6 py-2 rounded font-bold uppercase hover:bg-red-500 transition-colors">
           Zurück
         </a>
-        <button @click="handleLogout" class="bg-coral text-white px-6 py-2 rounded font-bold uppercase hover:bg-red-500 transition-colors">
+        <button @click="handleLogout" class="bg-accent text-white px-6 py-2 rounded font-bold uppercase hover:bg-red-500 transition-colors">
           Abmelden
         </button>
       </div>
@@ -103,7 +103,7 @@ const formatDate = (dateString: string) => {
 
         <!-- Zusagen -->
         <section>
-          <h2 class="text-4xl font-extrabold mb-8 darker border-b-4 border-coral inline-block">Zusagen</h2>
+          <h2 class="text-4xl font-extrabold mb-8 text-secondary border-b-4 border-accent inline-block">Zusagen</h2>
           <div class="grid gap-6">
             <div v-for="res in groupedResponses.zusagen" :key="res.id" class="bg-secondary p-6 rounded-2xl shadow-md border-l-8 border-green-500">
               <div class="flex flex-wrap justify-between items-start gap-4 mb-4">
@@ -134,7 +134,7 @@ const formatDate = (dateString: string) => {
 
         <!-- Absagen -->
         <section>
-          <h2 class="text-4xl font-extrabold mb-8 darker border-b-4 border-gray-400 inline-block">Absagen</h2>
+          <h2 class="text-4xl font-extrabold mb-8 text-secondary border-b-4 border-gray-400 inline-block">Absagen</h2>
           <div class="grid gap-6">
             <div v-for="res in groupedResponses.absagen" :key="res.id" class="bg-secondary p-6 rounded-2xl shadow-md border-l-8 border-gray-400 opacity-80">
               <div class="flex flex-wrap justify-between items-start gap-4 mb-4">

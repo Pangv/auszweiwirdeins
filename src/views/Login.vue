@@ -28,24 +28,24 @@ const handleLogin = async () => {
 <template>
   <div class="min-h-screen flex items-center justify-center bg-primary px-6">
     <div class="max-w-md w-full bg-secondary p-8 rounded-3xl shadow-xl">
-      <h1 class="text-3xl font-extrabold mb-6 text-center darker">Admin Login</h1>
+      <h1 class="text-3xl font-extrabold mb-6 text-center text-secondary">Admin Login</h1>
 
       <form @submit.prevent="handleLogin" class="space-y-4">
         <div>
           <label class="block text-sm font-bold mb-1">E-MAIL</label>
           <input type="email" v-model="email" required
-                 class="w-full p-3 border border-coral rounded bg-transparent focus:ring-2 focus:ring-coral outline-none">
+                 class="w-full p-3 border border-accent rounded bg-transparent focus:ring-2 focus:ring-accent outline-none">
         </div>
         <div>
           <label class="block text-sm font-bold mb-1">PASSWORT</label>
           <input type="password" v-model="password" required
-                 class="w-full p-3 border border-coral rounded bg-transparent focus:ring-2 focus:ring-coral outline-none">
+                 class="w-full p-3 border border-accent rounded bg-transparent focus:ring-2 focus:ring-accent outline-none">
         </div>
 
         <p v-if="error" class="text-red-600 text-sm font-bold">{{ error }}</p>
 
         <button type="submit" :disabled="loading"
-                class="w-full bg-coral text-white py-4 rounded font-bold uppercase hover:bg-red-500 transition-colors disabled:opacity-50">
+                class="w-full bg-accent text-white py-4 rounded font-bold uppercase hover:bg-red-500 transition-colors disabled:opacity-50">
           {{ loading ? 'Wird angemeldet...' : 'Anmelden' }}
         </button>
       </form>
