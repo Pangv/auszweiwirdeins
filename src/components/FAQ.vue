@@ -31,10 +31,10 @@
           </div>
         </div>
 
-        <div class="relative">
-          <div class="absolute -inset-4 border-4 bg-accent border-accent/60 rounded-3xl -rotate-2"></div>
+        <div class="hidden relative md:block">
+          <div class="absolute w-[90%] md:w-full -inset-4 border-4 bg-accent border-accent/60 rounded-3xl -rotate-2"></div>
           <img src="https://images.unsplash.com/photo-1542044801-30d3e45ae49a?q=80&w=1740&auto=format&fit=crop"
-               class="rounded-3xl rotate-5 shadow-2xl relative z-10 w-full object-cover h-[500px] object-cover hover:scale-101 transition-transform duration-500"
+               class="rounded-3xl w-[90%] md:w-full rotate-5 shadow-2xl relative z-10 w-full object-cover h-[500px] object-cover hover:scale-101 transition-transform duration-500"
                alt="FAQ Dekoration">
         </div>
       </div>

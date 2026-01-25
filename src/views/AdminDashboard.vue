@@ -13,6 +13,8 @@ interface Response {
   message: string
   musicNoGo: string
   updatedAt: string
+  createdAt?: string
+  editCode?: string
 }
 
 const responses = ref<Response[]>([])
@@ -64,7 +66,7 @@ const formatDate = (dateString: string) => {
 <template>
   <div class="min-h-screen bg-primary p-6 md:p-12">
     <div class="max-w-7xl mx-auto">
-      <div class="flex justify-between items-end mb-12">
+      <div class="flex flex-wrap justify-between items-end mb-12">
         <div>
           <h1 class="text-5xl md:text-7xl font-extrabold darker leading-none">Unsere Gäste</h1>
           <p class="text-xl mt-4 opacity-80 uppercase font-bold text-accent">Anmeldungen & Rückmeldungen</p>
@@ -110,7 +112,9 @@ const formatDate = (dateString: string) => {
                   <p class="text-accent font-bold uppercase text-sm">{{ res.guestCount }} Person(en)</p>
                 </div>
                 <div class="text-right">
-                  <p class="text-xs opacity-60 font-mono">{{ formatDate(res.updatedAt) }}</p>
+                  <p class="text-xs opacity-60 font-mono" title="Zuletzt aktualisiert">UA: {{ formatDate(res.updatedAt) }}</p>
+                  <p v-if="res.createdAt" class="text-xs opacity-60 font-mono" title="Erstellt am">ER: {{ formatDate(res.createdAt) }}</p>
+                  <p v-if="res.editCode" class="text-xs font-bold text-accent font-mono mt-1">Code: {{ res.editCode }}</p>
                   <span class="inline-block mt-2 bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-bold uppercase">Zusage</span>
                 </div>
               </div>
@@ -138,7 +142,9 @@ const formatDate = (dateString: string) => {
                   <h3 class="text-2xl font-bold">{{ res.names.join(', ') }}</h3>
                 </div>
                 <div class="text-right">
-                  <p class="text-xs opacity-60 font-mono">{{ formatDate(res.updatedAt) }}</p>
+                  <p class="text-xs opacity-60 font-mono" title="Zuletzt aktualisiert">UA: {{ formatDate(res.updatedAt) }}</p>
+                  <p v-if="res.createdAt" class="text-xs opacity-60 font-mono" title="Erstellt am">ER: {{ formatDate(res.createdAt) }}</p>
+                  <p v-if="res.editCode" class="text-xs font-bold text-accent font-mono mt-1">Code: {{ res.editCode }}</p>
                   <span class="inline-block mt-2 bg-gray-100 text-gray-800 text-xs px-3 py-1 rounded-full font-bold uppercase">Absage</span>
                 </div>
               </div>
