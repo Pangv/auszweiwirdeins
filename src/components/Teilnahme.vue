@@ -188,12 +188,6 @@ const handleSubmit = async () => {
       </div>
 
       <form id="rsvpForm" class="space-y-4" @submit.prevent="handleSubmit">
-        <div v-if="editCode" class="bg-accent/10 p-4 rounded-xl border border-accent/20 mb-6">
-          <p class="text-xs font-bold uppercase text-accent mb-1">Dein persönlicher Änderungs-Code:</p>
-          <p class="text-2xl font-mono font-bold tracking-widest">{{ editCode }}</p>
-          <p class="text-[10px] opacity-70 mt-2">Speichere dir diesen Code, um deine Anmeldung später zu bearbeiten.</p>
-        </div>
-
         <div class="flex gap-4 mb-4">
           <label class="flex items-center gap-2 cursor-pointer">
             <input type="radio" v-model="attending" value="yes" class="accent-accent w-5 h-5">
@@ -225,7 +219,6 @@ const handleSubmit = async () => {
           <input type="text" id="name-absage" v-model="names[0]" placeholder="DEIN NAME"
                  class="form-input"
                  required>
-
         </div>
 
 
@@ -252,6 +245,12 @@ const handleSubmit = async () => {
          :class="{'text-green-600': statusMessage.includes('erfolgreich'), 'text-red-600': statusMessage.includes('Fehler') || statusMessage.includes('Keine')}">
         {{ statusMessage }}
       </p>
+
+      <div v-if="editCode" class="bg-accent/10 p-4 rounded-xl border border-accent/20 mb-6">
+        <p class="text-xs font-bold uppercase text-accent mb-1">Dein persönlicher Änderungs-Code:</p>
+        <p class="text-2xl font-mono font-bold tracking-widest">{{ editCode }}</p>
+        <p class="text-[10px] opacity-70 mt-2">Speichere dir diesen Code, um deine Anmeldung später zu bearbeiten.</p>
+      </div>
 
       <div v-if="!isUsingManualCode" class="mt-8 pt-8 border-t border-primary/10">
         <p class="text-xs font-bold uppercase mb-2 opacity-50 text-center">Bereits angemeldet?</p>
