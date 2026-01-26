@@ -1,6 +1,4 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import { auth } from '../firebase'
-import { onAuthStateChanged } from 'firebase/auth'
 import Home from '../views/Home.vue'
 
 const router = createRouter({
@@ -33,7 +31,7 @@ const router = createRouter({
       component: () => import('../views/Privacy.vue')
     }
   ],
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior(to) {
     // if (savedPosition) return savedPosition;
 
     if (to.hash) {
@@ -49,7 +47,9 @@ const router = createRouter({
 })
 
 // Navigation Guard
-const getCurrentUser = () => {
+const getCurrentUser = async () => {
+  const { auth } = await import('../firebase')
+  const { onAuthStateChanged } = await import('firebase/auth')
   return new Promise((resolve, reject) => {
     const removeListener = onAuthStateChanged(
       auth,

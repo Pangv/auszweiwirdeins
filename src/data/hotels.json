@@ -2,7 +2,7 @@
   "hotels": [
     {
       "name": "ATLANTIC Hotel Münster",
-      "image": "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1000&auto=format&fit=crop",
+      "image": "https://images.unsplash.com/photo-1566073771259-6a8506099945?",
       "address": "Engelstraße 39, 48143 Münster",
       "price": "160€ - 280€",
       "distance": "Standesamt: 1,2 km\nCafe Yolk: 2,0 km",
@@ -12,7 +12,7 @@
     },
     {
       "name": "Factory Hotel",
-      "image": "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "image": "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?",
       "address": "An der Germania Brauerei 5, 48159 Münster",
       "price": "120€ - 190€",
       "distance": "Standesamt: 2,5 km\nCafe Yolk: 3,5 km",
@@ -22,7 +22,7 @@
     },
     {
       "name": "Novotel",
-      "image": "https://images.unsplash.com/photo-1517840901100-8179e982acb7?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "image": "https://images.unsplash.com/photo-1517840901100-8179e982acb7?",
       "address": "Hauptstraße 1",
       "price": "60 - 90 €",
       "distance": "Standesamt 3 km\nYolk 1,5 km",

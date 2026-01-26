@@ -18,9 +18,10 @@ import faqData from "../data/faq.json";
 
         <div class="hidden md:block card-decoration-container">
           <div class="card-decoration-bg -rotate-2"></div>
-          <img src="https://images.unsplash.com/photo-1542044801-30d3e45ae49a?q=80&w=1740&auto=format&fit=crop"
+          <img src="https://images.unsplash.com/photo-1542044801-30d3e45ae49a?q=80&w=1200&auto=format&fit=crop"
                class="card-image rotate-5 shadow-2xl relative z-10 h-125 hover:scale-101"
-               alt="FAQ Dekoration">
+               alt="FAQ Dekoration"
+               loading="lazy">
         </div>
       </div>
     </div>

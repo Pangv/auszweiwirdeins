@@ -175,9 +175,10 @@ const handleSubmit = async () => {
       <p class="mb-8 text-lg">Bitte melde dich über das Kontaktformular an.</p>
       <div class="card-decoration-container">
         <div class="card-decoration-bg rotate-2"></div>
-        <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=500"
+        <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=800&auto=format&fit=crop"
              class="card-image h-64 md:h-96 -rotate-4 hover:scale-105"
-             alt="Drinks">
+             alt="Drinks"
+             loading="lazy">
       </div>
     </div>
 
@@ -241,6 +242,7 @@ const handleSubmit = async () => {
           {{ saving ? 'Wird gespeichert...' : 'Abschicken' }}
         </button>
       </form>
+
       <p id="status" class="mt-4 font-bold text-center"
          :class="{'text-green-600': statusMessage.includes('erfolgreich'), 'text-red-600': statusMessage.includes('Fehler') || statusMessage.includes('Keine')}">
         {{ statusMessage }}
@@ -249,7 +251,7 @@ const handleSubmit = async () => {
       <div v-if="editCode" class="bg-accent/10 p-4 rounded-xl border border-accent/20 mb-6">
         <p class="text-xs font-bold uppercase text-accent mb-1">Dein persönlicher Änderungs-Code:</p>
         <p class="text-2xl font-mono font-bold tracking-widest">{{ editCode }}</p>
-        <p class="text-[10px] opacity-70 mt-2">Speichere dir diesen Code, um deine Anmeldung später zu bearbeiten.</p>
+        <p class="text-[14px] opacity-70 mt-2">Speichere dir diesen Code, um deine Anmeldung später zu bearbeiten.</p>
       </div>
 
       <div v-if="!isUsingManualCode" class="mt-8 pt-8 border-t border-primary/10">

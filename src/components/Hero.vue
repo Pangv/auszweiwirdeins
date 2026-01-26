@@ -19,6 +19,6 @@
       </div>
     </div>
     <div
-      class="bg-[url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop')] bg-cover bg-center hidden md:block"></div>
+      class="bg-[url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop')] bg-cover bg-center hidden md:block"></div>
   </header>
 </template>

@@ -16,8 +16,9 @@ const hotels = hotelData.hotels
         <div v-for="hotel in hotels" :key="hotel.name" class="flex flex-col space-y-4">
           <h3 class="text-xl font-display uppercase text-accent">{{ hotel.name }}</h3>
           <div class="overflow-hidden rounded-3xl h-64 shadow-lg">
-            <img :src="hotel.image" :alt="hotel.name"
-                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"/>
+            <img :src="hotel.image + '&auto=format&fit=crop&w=600&q=80'" :alt="hotel.name"
+                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                 loading="lazy"/>
           </div>
 
           <div class="space-y-2">
