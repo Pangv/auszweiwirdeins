@@ -28,3 +28,19 @@ collections:
               - { label: "Beschreibung", name: "description", widget: "text" }
               - { label: "Link", name: "link", widget: "text" }
               - { label: "Link-Text", name: "linkText", widget: "text" }
+
+  - name: "faq_collection"
+    label: "FAQ"
+    files:
+      - label: "Alle Fragen"
+        name: "faq_list"
+        file: "src/data/faq.json"
+        fields:
+          - label: "FAQ"
+            name: "faq"
+            widget: "list"
+            summary: "{{question}}"
+            fields:
+              - { label: "Frage", name: "question", widget: "string" }
+              - { label: "Antwort", name: "answer", widget: "text" }
+              - { label: "Subtext (optional)", name: "subtext", widget: "text", required: false }

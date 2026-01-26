@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import faqData from "../data/faq.json";
 </script>
 
 <template>
@@ -8,26 +9,10 @@
 
       <div class="grid md:grid-cols-2 gap-16 items-center">
         <div class="space-y-8">
-          <div>
-            <h3 class="text-2xl font-display uppercase text-accent mb-2">Dresscode</h3>
-            <p >Hauptsache Bunt! Alles ist erlaubt - je farbenfroher, desto besser.</p>
-            <p class="opacity-80 italic">Sie trägt weiß, er was grünes.</p>
-          </div>
-          <div>
-            <h3 class="text-2xl font-display uppercase text-accent mb-2">Kinder</h3>
-            <p >Ja, sehr gerne.</p>
-          </div>
-          <div>
-            <h3 class="text-2xl font-display uppercase text-accent mb-2">Geschenke</h3>
-            <p >Wir freuen uns am meisten über eure Anwesenheit. Falls ihr uns dennoch etwas schenken möchtet, freuen wir uns über einen Beitrag zu unseren Flitterwochen.</p>
-          </div>
-          <div>
-            <h3 class="text-2xl font-display uppercase text-accent mb-2">Locations</h3>
-            <p >Die Trauung findet im Standesamt statt, die Feier im Yolk am Kanal.</p>
-          </div>
-          <div>
-            <h3 class="text-2xl font-display uppercase text-accent mb-2">Reden & Partyspiele</h3>
-            <p >Bitte seht von Reden ab</p>
+          <div v-for="(item, index) in faqData.faq" :key="index">
+            <h3 class="text-2xl font-display uppercase text-accent mb-2">{{ item.question }}</h3>
+            <p>{{ item.answer }}</p>
+            <p v-if="item.subtext" class="opacity-80 italic">{{ item.subtext }}</p>
           </div>
         </div>
 
