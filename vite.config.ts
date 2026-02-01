@@ -26,7 +26,7 @@ export default defineConfig({
         manualChunks(id) {
           if (id.includes('node_modules')) {
             if (id.includes('firebase')) return 'vendor-firebase';
-            if (id.includes('vue') || id.includes('pinia') || id.includes('vue-router')) return 'vendor-vue';
+            if (id.includes('vue') || id.includes('vue-router')) return 'vendor-vue';
             return 'vendor';
           }
         }

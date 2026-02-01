@@ -44,3 +44,19 @@ collections:
               - { label: "Frage", name: "question", widget: "string" }
               - { label: "Antwort", name: "answer", widget: "text" }
               - { label: "Subtext (optional)", name: "subtext", widget: "text", required: false }
+
+  - name: "schedule_collection"
+    label: "Schedule"
+    files:
+      - label: "Alle Termine"
+        name: "schedule_list"
+        file: "src/data/schedule.json"
+        fields:
+          - label: "Termin"
+            name: "schedule"
+            widget: "list"
+            summary: "{{time}}"
+            fields:
+              - { label: "Zeit", name: "time", widget: "string"}
+              - { label: "Titel", name: "title", widget: "string"}
+              - { label: "Text", name: "description", widget: "text"}

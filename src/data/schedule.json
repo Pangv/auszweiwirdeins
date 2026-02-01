@@ -1,0 +1,24 @@
+{
+  "schedule": [
+    {
+      "time": "15:00",
+      "title": "Standesamt",
+      "description": "Trauung im kleinen Kreis (Details folgen)"
+    },
+    {
+      "time": "15:30",
+      "title": "Draußen sammeln",
+      "description": "Glückwünsche & Gruppenfotos vor der Tür"
+    },
+    {
+      "time": "16:00",
+      "title": "Anfahrt zum Yolk",
+      "description": "Individueller Wechsel zur Location am Kanal"
+    },
+    {
+      "time": "02:00",
+      "title": "Open End",
+      "description": "Feiern, bis wir rausgeworfen werden! (also wirklich um 02:00 Uhr)"
+    }
+  ]
+}

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+
+import scheduleData from '../data/schedule.json';
 </script>
 
 <template>
@@ -19,35 +21,15 @@
     </div>
     <div class="items-start md:order-1 flex">
         <div class="relative border-l-2 border-accent/50 ml-4 pl-8 space-y-12 flex flex-col justify-around h-full">
-          <div class="relative">
-            <div
-              class="absolute -left-10.25 top-1 w-4 h-4 rounded-full bg-accent shadow-[0_0_10px_#FF6B6B]"></div>
-            <p class="text-accent font-bold tracking-widest uppercase text-sm">14:00 Uhr</p>
-            <h3 class="text-2xl font-display uppercase">Standesamt</h3>
-            <p class="text-sm opacity-70">Trauung im kleinen Kreis (Details folgen)</p>
-          </div>
-
-          <div class="relative">
-            <div class="absolute -left-10.25 top-1 w-4 h-4 rounded-full bg-accent"></div>
-            <p class="text-accent font-bold tracking-widest uppercase text-sm">14:30 Uhr</p>
-            <h3 class="text-2xl font-display uppercase">Draußen sammeln</h3>
-            <p class="text-sm opacity-70">Glückwünsche & Gruppenfotos vor der Tür</p>
-          </div>
-
-          <div class="relative">
-            <div class="absolute -left-10.25 top-1 w-4 h-4 rounded-full bg-accent"></div>
-            <p class="text-accent font-bold tracking-widest uppercase text-sm">15:00 Uhr</p>
-            <h3 class="text-2xl font-display uppercase">Anfahrt zum Yolk</h3>
-            <p class="text-sm opacity-70">Individueller Wechsel zur Location am Kanal</p>
-          </div>
-
-          <div class="relative">
-            <div class="absolute -left-10.25 top-1 w-4 h-4 rounded-full bg-accent"></div>
-            <p class="text-accent font-bold tracking-widest uppercase text-sm">02:00 Uhr</p>
-            <h3 class="text-2xl font-display uppercase">Open End</h3>
-            <p class="text-sm opacity-70">Feiern, bis wir rausgeworfen werden! (also wirklich um
-              02:00 Uhr =)
-              )</p>
+            <div v-for="item in scheduleData.schedule" :key="item.time">
+              <div class="relative">
+                <div
+                  class="absolute -left-10.25 top-1 w-4 h-4 rounded-full bg-accent shadow-[0_0_10px_#FF6B6B]"></div>
+                <p class="text-accent font-bold tracking-widest uppercase text-sm">
+                  {{ item.time }} Uhr</p>
+                <h3 class="text-2xl font-display uppercase">{{item.title}}</h3>
+                <p class="text-sm opacity-70">{{item.description}}</p>
+              </div>
           </div>
         </div>
     </div>

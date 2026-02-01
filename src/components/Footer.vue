@@ -9,7 +9,6 @@
         <p class="text-2xl">Meldet euch gerne Jedezeit wenn noch Fragen offen sind</p>
       </div>
       <div class="w-full md:w-auto text-left md:text-right">
-        <p>0 152 22 xx xx 29</p>
         <div>
           <a href="mailto:hello@auszweiwirdeins.de">hello@auszweiwirdeins.de</a>
         </div>
