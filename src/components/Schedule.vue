@@ -1,21 +1,26 @@
 <script setup lang="ts">
-
 import scheduleData from '../data/schedule.json';
+import {onMounted} from "vue";
+
+onMounted(async () => {
+  const initMaps = (await import('../maps')).default
+  initMaps()
+})
 </script>
 
 <template>
   <section class="grid md:grid-cols-2 bg-primary p-5 md:p-10 text-secondary">
     <div class="md:order-2">
-      <h2 class="text-secondary heading-huge mb-12 text-left max-w-[12ch] md:max-w-none">Was dich
+      <h2 class="text-secondary heading-huge mb-12 text-left max-w-[12ch] ">Was dich
         erwartet</h2>
       <div class="space-y-4 mb-12 md:mb-0">
         <div>
           <p class="text-xs uppercase font-bold text-accent mb-2">📍 Hörsterstraße 28</p>
-          <div id="mapStandesamt" class="map h-45!"></div>
+          <div id="mapStandesamt" class="map h-50!"></div>
         </div>
         <div>
           <p class="text-xs uppercase font-bold text-accent mb-2">📍 Bennostraße 5</p>
-          <div id="mapYolk" class="map h-45!"></div>
+          <div id="mapYolk" class="map h-50!"></div>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@
   "hotels": [
     {
       "name": "ATLANTIC Hotel Münster",
-      "image": "https://images.unsplash.com/photo-1566073771259-6a8506099945?",
+      "image": "",
       "address": "Engelstraße 39, 48143 Münster",
       "price": "160€ - 280€",
       "distance": "Standesamt: 1,2 km\nCafe Yolk: 2,0 km",
@@ -12,7 +12,7 @@
     },
     {
       "name": "Factory Hotel",
-      "image": "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?",
+      "image": "",
       "address": "An der Germania Brauerei 5, 48159 Münster",
       "price": "120€ - 190€",
       "distance": "Standesamt: 2,5 km\nCafe Yolk: 3,5 km",
@@ -22,13 +22,23 @@
     },
     {
       "name": "Novotel",
-      "image": "https://images.unsplash.com/photo-1517840901100-8179e982acb7?",
+      "image": "",
       "address": "Hauptstraße 1",
       "price": "60 - 90 €",
       "distance": "Standesamt 3 km\nYolk 1,5 km",
-      "description": "Einfach Novotel",
+      "description": "Das Hotel Novotel Münster City empfängt Sie zentral am Bahnhof und in unmittelbarer Nähe zur Innenstadt. Sie erwartet ein modernes Tagungs- und Familienhotel in Münster, das Stil, Komfort und herzliche Gastfreundschaft nicht nur verbindet, sondern auch lebt.",
       "link": "https://www.novotel.de/de/hotel-mueller-strasse-1-muenster/hotel-mueller-strasse-1-muenster",
       "linkText": "Novotel"
+    },
+    {
+      "name": "H4 Hotel",
+      "image": "",
+      "address": "Stubengasse 33, 48143 Münster",
+      "price": "100€ - 140€",
+      "distance": "Standesamt 1,6 km\nYolk 2,1 km",
+      "description": "Inmitten der historischen Altstadt ist unser Hotel in Münster sehr günstig gelegen: Die zentrale Lage ist ideal für einen Stadtbummel und Kulturprogramm zu Fuß. Auch darüber hinaus profitieren Sie von einer hervorragenden Anbindung: Das auf zwei Gebäudeteile aufgeteilte Hotel liegt nur rund 500 Meter vom Hauptbahnhof entfernt.",
+      "link": "https://www.h-hotels.com/de/h4/hotels/h4-hotel-muenster?utm=hotel-location&utm_source=google-business-profil",
+      "linkText": "H4 Hotel"
     }
   ]
 }

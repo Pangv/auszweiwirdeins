@@ -21,7 +21,7 @@ collections:
             summary: "{{name}}"
             fields:
               - { label: "Name", name: "name", widget: "string" }
-              - { label: "Bild", name: "image", widget: "image" }
+              - { label: "Bild", name: "image", widget: "image" , required: false}
               - { label: "Adresse", name: "address", widget: "string" }
               - { label: "Preisspanne", name: "price", widget: "string" }
               - { label: "Entfernung", name: "distance", widget: "text" }
