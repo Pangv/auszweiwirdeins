@@ -16,10 +16,10 @@ const hotels = hotelData.hotels
         <div v-for="hotel in hotels" :key="hotel.name" class="flex flex-col space-y-4 group">
           <h3 class="text-xl font-display uppercase text-accent">{{ hotel.name }}</h3>
 
-          <div class="overflow-hidden rounded-3xl h-64 shadow-lg bg-linear-to-br from-accent/10 to-accent/20 border border-accent/5 flex items-center justify-center relative transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
+          <div class="overflow-hidden rounded-3xl h-64 shadow-lg bg-linear-to-br from-accent/30 to-accent/50 border border-accent/5 flex items-center justify-center relative transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
 
             <div class="absolute inset-0 flex items-center justify-center opacity-[0.03] select-none pointer-events-none overflow-hidden">
-        <span class="text-9xl font-bold uppercase -rotate-12 tracking-tighter">
+        <span class="text-5xl text-center font-bold uppercase -rotate-12 tracking-tighter">
           {{ hotel.name }}
         </span>
             </div>
