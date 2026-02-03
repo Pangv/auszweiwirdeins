@@ -3,7 +3,7 @@ import {ref, watch, onMounted} from 'vue'
 import {useRoute} from 'vue-router'
 import {auth, db} from './../firebase'
 import {signInAnonymously, onAuthStateChanged} from 'firebase/auth'
-import {doc, getDoc, setDoc, collection, query, where, getDocs} from 'firebase/firestore'
+import {doc, getDoc, setDoc, collection, query, where, getDocs, limit} from 'firebase/firestore'
 
 const route = useRoute()
 const guestCount = ref(1)
@@ -63,7 +63,11 @@ const loadByCode = async (code: string) => {
   statusMessage.value = 'Suche Anmeldung...'
 
   try {
-    const q = query(collection(db, 'responses'), where('editCode', '==', code.toUpperCase()))
+    const q = query(
+      collection(db, 'responses'),
+      where('editCode', '==', code.toUpperCase()),
+      limit(1)
+    )
     const querySnapshot = await getDocs(q)
 
     if (!querySnapshot.empty && querySnapshot.docs.length > 0) {
