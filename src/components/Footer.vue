@@ -6,7 +6,7 @@
     <img src="" alt="">
     <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
       <div class="w-full md:w-auto text-left">
-        <p class="text-2xl">Meldet euch gerne Jedezeit wenn noch Fragen offen sind</p>
+        <p class="text-2xl">Meldet euch gerne Jederzeit wenn noch Fragen offen sind</p>
       </div>
       <div class="w-full md:w-auto text-left md:text-right">
         <div>
