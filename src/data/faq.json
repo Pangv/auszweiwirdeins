@@ -2,7 +2,7 @@
   "faq": [
     {
       "question": "Dresscode",
-      "answer": "Wir lieben es bunt! Tobt euch farblich gerne richtig aus – je farbenfroher ihr erscheint, desto schöner strahlt unser Fest. Damit ihr uns in der Menge findet: ",
+      "answer": "Wir lieben es bunt! Tobt euch farblich gerne richtig aus – je farbenfroher ihr erscheint, desto schöner strahlt unser Fest. Damit ihr uns in der Menge findet:",
       "subtext": "Die Braut trägt klassisches Weiß, der Bräutigam setzt (vermutlich) auf Grün."
     },
     {
@@ -28,7 +28,12 @@
     {
       "question": "Spiele",
       "answer": "Wenn ihr eine Aktion plant, gilt bei uns das Motto: „Qualität vor Tradition“. Wir freuen uns über kreative Ideen, möchten aber höflich darum bitten, auf die typischen „Klassiker“, bei denen man sich zum Affen macht, zu verzichten. Lasst uns lieber stilvoll und entspannt feiern!",
-      "subtext": "Sprecht euch am besten mit den Trauzeugen ab."
+      "subtext": "Sprecht euch am besten mit den Trauzeugen ab, die Kontaktdaten gibts bei uns :)"
+    },
+    {
+      "question": "Gibt es einen Raucherbereich?",
+      "answer": "Wir feiern eine komplett rauchfreie Hochzeit. Um das Wohlbefinden all unserer Gäste  zu gewährleisten, bitten wir euch heute darauf zu verzichten.",
+      "subtext": ""
     }
   ]
 }
