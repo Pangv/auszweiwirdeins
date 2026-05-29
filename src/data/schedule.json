@@ -1,9 +1,19 @@
 {
   "schedule": [
     {
-      "time": "15:00",
+      "time": "30.07.2026",
+      "title": "Ist der Tag",
+      "description": "falls wir das bisher verheimlicht haben ;)"
+    },
+    {
+      "time": "14:45",
       "title": "Standesamt",
-      "description": "Trauung im kleinen Kreis (Details folgen)"
+      "description": "Einlass: Bitte dann vor Ort sein"
+    },
+    {
+      "time": "15:00",
+      "title": "Standesamtliche - Trauung",
+      "description": "Start"
     },
     {
       "time": "15:30",
@@ -17,7 +27,7 @@
     },
     {
       "time": "02:00",
-      "title": "Open End",
+      "title": "Abriss",
       "description": "Feiern, bis wir rausgeworfen werden! (also wirklich um 02:00 Uhr)"
     }
   ]
