@@ -39,3 +39,7 @@ firebase_key_kommrum.json
 
 firebase-debug.log
 .firebase/
+/.firebaserc
+/auszweiwirdeins.iml
+/.vscode/extensions.json
+/firestore.rules

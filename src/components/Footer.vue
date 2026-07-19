@@ -12,6 +12,9 @@
         <div>
           <a href="mailto:hello@auszweiwirdeins.de">hello@auszweiwirdeins.de</a>
         </div>
+        <RouterLink to="/galerie" class="hover:text-accent transition-colors">
+          Galerie
+        </RouterLink>
         <div>
           <RouterLink to="/impressum">Impressum</RouterLink>
         </div>
