@@ -2,8 +2,8 @@
   "faq": [
     {
       "question": "Dresscode",
-      "answer": "Wir lieben es bunt! Tobt euch farblich gerne richtig aus – je farbenfroher ihr erscheint, desto schöner strahlt unser Fest. Damit ihr uns in der Menge findet: ",
-      "subtext": "Die Braut trägt klassisches Weiß, der Bräutigam setzt (vermutlich) auf Grün."
+      "answer": "Wir lieben es bunt! Tobt euch farblich gerne richtig aus – je farbenfroher ihr erscheint, desto schöner strahlt unser Fest. Damit ihr uns in der Menge findet:",
+      "subtext": "Die Braut trägt klassisches Weiß, der Bräutigam setzt auf Grün."
     },
     {
       "question": "Kinder",
@@ -18,7 +18,7 @@
     {
       "question": "Locations",
       "answer": "Wir sagen „Ja“ im Standesamt. Im Anschluss lassen wir die Korken knallen und feiern gemeinsam im Yolk am Kanal.",
-      "subtext": ""
+      "subtext": "Wirklich alle können auch zur Trauung, es wird sowohl genug Platz wie auch Sitzplätze im Saal geben"
     },
     {
       "question": "Reden",
@@ -26,9 +26,14 @@
       "subtext": ""
     },
     {
-      "question": "Spiele",
-      "answer": "Wenn ihr eine Aktion plant, gilt bei uns das Motto: „Qualität vor Tradition“. Wir freuen uns über kreative Ideen, möchten aber höflich darum bitten, auf die typischen „Klassiker“, bei denen man sich zum Affen macht, zu verzichten. Lasst uns lieber stilvoll und entspannt feiern!",
-      "subtext": "Sprecht euch am besten mit den Trauzeugen ab."
+      "question": "Sind Hochzeitsspiele geplant?",
+      "answer": "Wir möchten unseren Tag entspannt und ohne klassische Programmpunkte oder Spiele feiern. Stattdessen freuen wir uns auf gute Gespräche und eine ungezwungene Zeit. Für alle, die Lust auf ein wenig Kurzweil haben: Das Café Yolk bietet eine tolle Auswahl an Brett- und Kartenspielen, die ihr sehr gerne nutzen könnt!",
+      "subtext": ""
+    },
+    {
+      "question": "Gibt es einen Raucherbereich?",
+      "answer": "Wir feiern eine komplett rauchfreie Hochzeit. Um das Wohlbefinden all unserer Gäste  zu gewährleisten, bitten wir euch heute darauf zu verzichten.",
+      "subtext": ""
     }
   ]
 }

@@ -1,9 +1,19 @@
 {
   "schedule": [
     {
-      "time": "15:00",
+      "time": "30.07.2026",
+      "title": "Ist der Tag",
+      "description": "falls wir das bisher verheimlicht haben ;)"
+    },
+    {
+      "time": "14:45",
       "title": "Standesamt",
-      "description": "Trauung im kleinen Kreis (Details folgen)"
+      "description": "Mh, alle die eine Einladung erhalten haben, können auch mit rein. Also alle :) \nEinlass: Bitte dann vor Ort sein"
+    },
+    {
+      "time": "15:00",
+      "title": "Trauung",
+      "description": "Start, Unterschrift, Ringe"
     },
     {
       "time": "15:30",
@@ -12,12 +22,12 @@
     },
     {
       "time": "16:00",
-      "title": "Anfahrt zum Yolk",
+      "title": "Anfahrt zum Yolk & Sektempfang",
       "description": "Individueller Wechsel zur Location am Kanal"
     },
     {
       "time": "02:00",
-      "title": "Open End",
+      "title": "Abriss",
       "description": "Feiern, bis wir rausgeworfen werden! (also wirklich um 02:00 Uhr)"
     }
   ]
