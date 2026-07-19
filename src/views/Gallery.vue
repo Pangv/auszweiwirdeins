@@ -39,100 +39,123 @@
         </button>
       </div>
 
-      <!-- Upload-Button -->
-      <div class="mb-10">
-        <label
-          class="inline-block cursor-pointer bg-accent text-white font-display text-xl px-8 py-3 rounded-full shadow-xl hover:scale-100 transition-transform"
-          :class="{ 'opacity-50 pointer-events-none': uploading }"
+      <!-- Passwort-Prompt (wenn kein Passwort gespeichert) -->
+      <div
+        v-if="showPasswordPrompt"
+        class="mb-8 p-6 border-4 border-accent rounded-3xl bg-accent/10 max-w-md"
+      >
+        <label class="form-label">Upload-Passwort eingeben:</label>
+        <input
+          v-model="password"
+          type="password"
+          class="form-input mb-3"
+          placeholder="Passwort…"
+          @keyup.enter="savePassword"
+        />
+        <button
+          class="bg-primary text-secondary font-display px-6 py-2 rounded-full hover:bg-accent transition-colors"
+          @click="savePassword"
         >
-          {{ uploading ? 'Lädt hoch…' : '+ Fotos hochladen' }}
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            class="hidden"
-            :disabled="uploading"
-            @change="handleUpload"
-          />
-        </label>
-        <p v-if="uploadProgress" class="mt-3 font-bold text-primary">{{ uploadProgress }}</p>
-        <p v-if="errorMsg" class="mt-3 font-bold text-accent">{{ errorMsg }}</p>
-
-        <!-- Galerie-Code (immer sichtbar wenn vorhanden) -->
-        <div
-          v-if="galleryCode"
-          class="mt-4 p-4 border-2 border-accent/30 rounded-2xl bg-accent/5 md:inline-block"
-        >
-          <p class="text-xs font-bold uppercase opacity-50 mb-1">Dein Galerie-Code</p>
-          <p class="text-2xl font-mono font-bold tracking-widest text-accent select-all">
-            {{ galleryCode }}
-          </p>
-        </div>
+          Speichern
+        </button>
       </div>
 
-      <!-- Galerie-Grid -->
-      <div v-if="loading" class="text-center py-10 font-display text-2xl">Lädt…</div>
-
-      <div v-else-if="photos.length === 0" class="text-center py-10 text-lg opacity-70">
-        Noch keine Fotos – sei die/der Erste!
-      </div>
-
-      <div v-else class="columns-2 md:columns-3 lg:columns-4 gap-4">
-        <div
-          v-for="photo in photos"
-          :key="photo.id"
-          class="relative group break-inside-avoid mb-4 overflow-hidden rounded-2xl shadow-lg cursor-pointer"
-        >
-          <img
-            :src="`${API}/uploads/thumbs/${photo.thumb}`"
-            loading="lazy"
-            class="w-full h-auto object-cover transition-transform duration-200"
-            @click="lightboxSrc = `${API}/uploads/${photo.filename}`"
-          />
-
-          <!-- Overlay mit Buttons -->
-          <div
-            class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-3"
+      <template v-if="password">
+        <!-- Upload-Button -->
+        <div class="mb-10">
+          <label
+            class="inline-block cursor-pointer bg-accent text-white font-display text-xl px-8 py-3 rounded-full shadow-xl hover:scale-100 transition-transform"
+            :class="{ 'opacity-50 pointer-events-none': uploading }"
           >
-            <button
-              class="bg-white text-accent w-10 h-10 rounded-full flex items-center justify-center font-bold hover:bg-accent hover:text-white transition"
-              @click.stop="downloadPhoto(photo.filename)"
-              title="Download"
-            >
-              ⬇️
-            </button>
-            <button
-              v-if="ownerId && photo.owner_id === ownerId"
-              class="bg-accent text-white w-10 h-10 rounded-full flex items-center justify-center font-bold hover:bg-red-600 transition"
-              title="Löschen"
-              @click.stop="deletePhoto(photo.id)"
-            >
-              ✕
-            </button>
+            {{ uploading ? 'Lädt hoch…' : '+ Fotos hochladen' }}
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              class="hidden"
+              :disabled="uploading"
+              @change="handleUpload"
+            />
+          </label>
+          <p v-if="uploadProgress" class="mt-3 font-bold text-primary">{{ uploadProgress }}</p>
+          <p v-if="errorMsg" class="mt-3 font-bold text-accent">{{ errorMsg }}</p>
+
+          <!-- Galerie-Code (immer sichtbar wenn vorhanden) -->
+          <div
+            v-if="galleryCode"
+            class="mt-4 p-4 border-2 border-accent/30 rounded-2xl bg-accent/5 md:inline-block"
+          >
+            <p class="text-xs font-bold uppercase opacity-50 mb-1">Dein Galerie-Code</p>
+            <p class="text-2xl font-mono font-bold tracking-widest text-accent select-all">
+              {{ galleryCode }}
+            </p>
           </div>
         </div>
-      </div>
 
-      <!-- Lightbox -->
-      <div
-        v-if="lightboxSrc"
-        class="fixed inset-0 z-50 bg-black/90 flex flex-col items-center justify-center p-4"
-        @click="lightboxSrc = null"
-      >
-        <button
-          class="absolute top-6 right-6 text-white text-4xl font-bold hover:text-accent transition-colors"
+        <!-- Galerie-Grid -->
+        <div v-if="loading" class="text-center py-10 font-display text-2xl">Lädt…</div>
+
+        <div v-else-if="photos.length === 0" class="text-center py-10 text-lg opacity-70">
+          Noch keine Fotos – sei die/der Erste!
+        </div>
+
+        <div v-else class="columns-2 md:columns-3 lg:columns-4 gap-4">
+          <div
+            v-for="photo in photos"
+            :key="photo.id"
+            class="relative group break-inside-avoid mb-4 overflow-hidden rounded-2xl shadow-lg cursor-pointer"
+          >
+            <img
+              :src="`${API}/uploads/thumbs/${photo.thumb}`"
+              loading="lazy"
+              class="w-full h-auto object-cover transition-transform duration-200"
+              @click="lightboxSrc = `${API}/uploads/${photo.filename}`"
+            />
+
+            <!-- Overlay mit Buttons -->
+            <div
+              class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-3"
+            >
+              <button
+                class="bg-white text-accent w-10 h-10 rounded-full flex items-center justify-center font-bold hover:bg-accent hover:text-white transition"
+                @click.stop="downloadPhoto(photo.filename)"
+                title="Download"
+              >
+                ⬇️
+              </button>
+              <button
+                v-if="ownerId && photo.owner_id === ownerId"
+                class="bg-accent text-white w-10 h-10 rounded-full flex items-center justify-center font-bold hover:bg-red-600 transition"
+                title="Löschen"
+                @click.stop="deletePhoto(photo.id)"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lightbox -->
+        <div
+          v-if="lightboxSrc"
+          class="fixed inset-0 z-50 bg-black/90 flex flex-col items-center justify-center p-4"
           @click="lightboxSrc = null"
         >
-          ✕
-        </button>
-        <img :src="lightboxSrc" class="max-w-full max-h-[80vh] object-contain rounded-lg" />
-        <button
-          class="mt-6 bg-primary text-secondary font-display px-8 py-2 rounded-full hover:bg-accent transition-colors"
-          @click.stop="downloadPhoto(lightboxSrc.split('/').pop()!)"
-        >
-          ⬇️ Original herunterladen
-        </button>
-      </div>
+          <button
+            class="absolute top-6 right-6 text-white text-4xl font-bold hover:text-accent transition-colors"
+            @click="lightboxSrc = null"
+          >
+            ✕
+          </button>
+          <img :src="lightboxSrc" class="max-w-full max-h-[80vh] object-contain rounded-lg" />
+          <button
+            class="mt-6 bg-primary text-secondary font-display px-8 py-2 rounded-full hover:bg-accent transition-colors"
+            @click.stop="downloadPhoto(lightboxSrc.split('/').pop()!)"
+          >
+            ⬇️ Original herunterladen
+          </button>
+        </div>
+      </template>
     </div>
 
     <Footer></Footer>
@@ -164,8 +187,13 @@ interface Photo {
   created_at: number
 }
 
-// --- Owner-Code-System ---
-const ownerId = ref(localStorage.getItem('galerie_owner_id') || '')
+// --- Owner-ID (UUID immer vorhanden, Code optional für Recovery) ---
+let storedId = localStorage.getItem('galerie_owner_id')
+if (!storedId) {
+  storedId = crypto.randomUUID()
+  localStorage.setItem('galerie_owner_id', storedId)
+}
+const ownerId = ref(storedId)
 const galleryCode = ref(localStorage.getItem('galerie_gallery_code') || '')
 const showCodePrompt = ref(false)
 const codeInput = ref('')
@@ -176,7 +204,7 @@ function generateCode(): string {
 }
 
 async function requestNewCode() {
-  const newOwnerId = crypto.randomUUID()
+  const newOwnerId = ownerId.value
   const newCode = generateCode()
 
   try {
@@ -185,9 +213,7 @@ async function requestNewCode() {
       owner_id: newOwnerId,
       created_at: serverTimestamp(),
     })
-    localStorage.setItem('galerie_owner_id', newOwnerId)
     localStorage.setItem('galerie_gallery_code', newCode)
-    ownerId.value = newOwnerId
     galleryCode.value = newCode
     showCodePrompt.value = false
     errorMsg.value = ''
@@ -250,7 +276,7 @@ async function tryAutoRecover() {
 
 // --- Passwort (persistent, einmal eingeben) ---
 const password = ref(localStorage.getItem('galerie_password') || '')
-const showPasswordPrompt = ref(false)
+const showPasswordPrompt = ref(!password.value)
 
 function savePassword() {
   localStorage.setItem('galerie_password', password.value)
@@ -284,19 +310,6 @@ async function handleUpload(event: Event) {
   const input = event.target as HTMLInputElement
   if (!input.files || input.files.length === 0) return
 
-  // Owner muss bekannt sein
-  if (!ownerId.value) {
-    if (galleryCode.value) {
-      await tryAutoRecover()
-    }
-    if (!ownerId.value) {
-      showCodePrompt.value = true
-      errorMsg.value = 'Bitte fordere zuerst einen Galerie-Code an.'
-      return
-    }
-  }
-
-  // Passwort-Prüfung
   if (!password.value) {
     showPasswordPrompt.value = true
     return
@@ -385,13 +398,15 @@ onMounted(async () => {
     // silent – ohne Auth kein Code-Recovery, aber Galerie-Anzeige funktioniert
   }
   await loadPhotos()
-  if (!ownerId.value) {
-    if (galleryCode.value) {
-      await tryAutoRecover()
-    }
+  if (!galleryCode.value) {
     if (!ownerId.value) {
-      showCodePrompt.value = true
+      // Nur falls ownerId wider Erwarten leer – direkt setzen
+      const id = crypto.randomUUID()
+      localStorage.setItem('galerie_owner_id', id)
+      ownerId.value = id
     }
+  } else if (!ownerId.value) {
+    await tryAutoRecover()
   }
 })
 </script>
