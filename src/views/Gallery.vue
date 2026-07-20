@@ -103,36 +103,71 @@
           <div
             v-for="photo in photos"
             :key="photo.id"
-            class="relative group break-inside-avoid mb-4 overflow-hidden rounded-2xl shadow-lg cursor-pointer"
+            class="break-inside-avoid mb-4 rounded-2xl shadow-lg bg-white"
           >
-            <img
-              :src="`${API}/uploads/thumbs/${photo.thumb}`"
-              loading="lazy"
-              class="w-full h-auto object-cover transition-transform duration-200"
-              @click="lightboxSrc = `${API}/uploads/${photo.filename}`"
-            />
+            <div class="relative">
+              <img
+                :src="`${API}/uploads/thumbs/${photo.thumb}`"
+                loading="lazy"
+                class="w-full h-auto object-cover rounded-t-2xl cursor-pointer"
+                @click="selectedIds.size > 0 ? toggleSelect(photo.id) : lightboxSrc = `${API}/uploads/${photo.filename}`"
+              />
+              <input
+                type="checkbox"
+                :checked="selectedIds.has(photo.id)"
+                class="absolute top-2 left-2 w-5 h-5 accent-accent cursor-pointer"
+                @click.stop
+                @change="toggleSelect(photo.id)"
+              />
+            </div>
 
-            <!-- Overlay mit Buttons -->
-            <div
-              class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-3"
-            >
+            <div class="flex items-center justify-between px-3 py-2 border-t border-gray-100">
               <button
-                class="bg-white text-accent w-10 h-10 rounded-full flex items-center justify-center font-bold hover:bg-accent hover:text-white transition"
+                class="flex items-center gap-1.5 text-sm font-medium text-accent hover:text-accent/70 transition-colors"
                 @click.stop="downloadPhoto(photo.filename)"
                 title="Download"
               >
-                ⬇️
+                <span class="text-base">⬇️</span>
+                <span>Download</span>
               </button>
               <button
-                v-if="ownerId && photo.owner_id === ownerId"
-                class="bg-accent text-white w-10 h-10 rounded-full flex items-center justify-center font-bold hover:bg-red-600 transition"
+                v-if="isDev || (ownerId && photo.owner_id === ownerId)"
+                class="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-700 transition-colors"
                 title="Löschen"
                 @click.stop="deletePhoto(photo.id)"
               >
-                ✕
+                <span class="text-base">✕</span>
+                <span>Löschen</span>
               </button>
             </div>
           </div>
+        </div>
+
+        <!-- Bulk-Action Bar -->
+        <div
+          v-if="selectedIds.size > 0"
+          class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-4 bg-white border-2 border-accent/30 rounded-full shadow-2xl px-6 py-3"
+        >
+          <span class="text-sm font-bold whitespace-nowrap">{{ selectedIds.size }} ausgewählt</span>
+          <button
+            class="bg-accent text-white font-display px-5 py-1.5 rounded-full text-sm hover:bg-accent/80 transition-colors"
+            @click="downloadSelected"
+          >
+            ⬇️ Ausgewählte herunterladen
+          </button>
+          <button
+            class="text-sm underline opacity-60 hover:opacity-100"
+            @click="selectedIds.clear()"
+          >
+            Abwählen
+          </button>
+          <button
+            v-if="canDeleteAny"
+            class="bg-red-500 text-white font-display px-5 py-1.5 rounded-full text-sm hover:bg-red-700 transition-colors"
+            @click="deleteSelected"
+          >
+            ✕ Ausgewählte löschen
+          </button>
         </div>
 
         <!-- Lightbox -->
@@ -163,7 +198,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { db, auth } from '../firebase'
 import { signInAnonymously } from 'firebase/auth'
 import {
@@ -178,6 +213,7 @@ import {
 import Footer from '@/components/Footer.vue'
 
 const API = 'https://galerie.auszweiwirdeins.de'
+const isDev = import.meta.env.DEV
 
 interface Photo {
   id: string
@@ -364,22 +400,55 @@ async function handleUpload(event: Event) {
   }
 }
 
-// --- Download ---
-function downloadPhoto(filename: string) {
+// --- Selection for bulk download ---
+const selectedIds = ref(new Set<string>())
+
+function toggleSelect(id: string) {
+  const s = new Set(selectedIds.value)
+  if (s.has(id)) s.delete(id)
+  else s.add(id)
+  selectedIds.value = s
+}
+
+// --- Download (force download via blob, works cross-origin) ---
+async function downloadPhoto(filename: string) {
   const url = `${API}/uploads/${filename}`
-  const a = document.createElement('a')
-  a.href = url
-  a.download = filename
-  a.click()
+  try {
+    const res = await fetch(url)
+    const blob = await res.blob()
+    const blobUrl = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = blobUrl
+    a.download = filename
+    a.click()
+    URL.revokeObjectURL(blobUrl)
+  } catch {
+    errorMsg.value = 'Download fehlgeschlagen.'
+  }
+}
+
+// --- Bulk download ---
+const canDeleteAny = computed(() => {
+  if (isDev) return selectedIds.value.size > 0
+  return photos.value.some((p) => selectedIds.value.has(p.id) && p.owner_id === ownerId.value)
+})
+
+async function downloadSelected() {
+  const ids = Array.from(selectedIds.value)
+  const toDownload = photos.value.filter((p) => ids.includes(p.id))
+  selectedIds.value = new Set()
+  for (const photo of toDownload) {
+    await downloadPhoto(photo.filename)
+  }
 }
 
 // --- Löschen ---
-async function deletePhoto(id: string) {
-  if (!confirm('Dieses Foto wirklich löschen?')) return
+async function deletePhotoById(id: string, photoOwnerId?: string) {
+  const owner = isDev && photoOwnerId ? photoOwnerId : ownerId.value
   try {
     const res = await fetch(`${API}/api/photos/${id}`, {
       method: 'DELETE',
-      headers: { 'X-Owner-Id': ownerId.value },
+      headers: { 'X-Owner-Id': owner },
     })
     if (!res.ok) {
       const err = await res.json().catch(() => ({}))
@@ -388,6 +457,22 @@ async function deletePhoto(id: string) {
     photos.value = photos.value.filter((p) => p.id !== id)
   } catch (e: any) {
     errorMsg.value = e.message
+  }
+}
+
+async function deletePhoto(id: string) {
+  if (!confirm('Dieses Foto wirklich löschen?')) return
+  const photo = photos.value.find((p) => p.id === id)
+  await deletePhotoById(id, photo?.owner_id)
+}
+
+async function deleteSelected() {
+  const ids = Array.from(selectedIds.value)
+  const toDelete = photos.value.filter((p) => ids.includes(p.id))
+  if (!confirm(`${ids.length} Foto(s) wirklich löschen?`)) return
+  selectedIds.value = new Set()
+  for (const photo of toDelete) {
+    await deletePhotoById(photo.id, photo.owner_id)
   }
 }
 
