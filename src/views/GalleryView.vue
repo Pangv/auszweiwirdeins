@@ -231,7 +231,13 @@
 
                 <!-- Metadaten-Badge -->
                 <div class="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-[10px] px-2 py-1">
-                  {{ photo.taken_at ? '📷 ' + formatDate(photo.taken_at) : '⬆️ ' + formatDate(photo.created_at) }}
+                  <div class="flex justify-between">
+                    <span>⬆️ {{ formatDate(photo.created_at, 'short') }}</span>
+                    <span>{{ getPhotoSizeLabel(photo) }}</span>
+                  </div>
+                  <div v-if="photo.taken_at" class="flex justify-between">
+                    <span>📷 {{ formatDate(photo.taken_at, 'short') }}</span>
+                  </div>
                 </div>
               </div>
               <!-- Aktionen bleiben wie gehabt -->
@@ -827,9 +833,15 @@ async function deleteSelected(): Promise<void> {
   selectedIds.value = new Set()
 
   try {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'X-Owner-Id': ownerId.value,
+    }
+    if (isDev) headers['X-Upload-Password'] = password.value || import.meta.env.VITE_UPLOAD_PASSWORD
+
     const res = await fetch(`${API}/api/photos`, {
       method: 'DELETE',
-      headers: { 'Content-Type': 'application/json', 'X-Owner-Id': ownerId.value },
+      headers,
       body: JSON.stringify({ ids }),
     })
     if (!res.ok) throw new Error('Löschen fehlgeschlagen.')
@@ -847,7 +859,8 @@ async function deleteSelected(): Promise<void> {
     await loadStorage()
 
     if (data.failed.length > 0) {
-      // …deine Fehlerbehandlung wie gehabt
+      const reasons = data.failed.map((f) => `${f.id}: ${f.reason}`).join('\n')
+      errorMsg.value = `${data.failed.length} Foto(s) konnten nicht gelöscht werden:\n${reasons}`
     }
   } catch (e: unknown) {
     deletingIds.value = new Set() // Rollback: Bilder wieder voll sichtbar
@@ -900,14 +913,18 @@ function navigatePhoto(dir: 'prev' | 'next'): void {
 }
 
 function onTouchStart(e: TouchEvent): void {
-  touchStartX = e.touches[0].clientX
-  touchStartY = e.touches[0].clientY
+  const t = e.touches[0]
+  if (!t) return
+  touchStartX = t.clientX
+  touchStartY = t.clientY
   touchSwiped = false
 }
 
 function onTouchEnd(e: TouchEvent): void {
-  const dx = e.changedTouches[0].clientX - touchStartX
-  const dy = e.changedTouches[0].clientY - touchStartY
+  const t = e.changedTouches[0]
+  if (!t) return
+  const dx = t.clientX - touchStartX
+  const dy = t.clientY - touchStartY
   if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
     touchSwiped = true
     navigatePhoto(dx > 0 ? 'prev' : 'next')

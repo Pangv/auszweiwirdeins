@@ -23,9 +23,15 @@ export function useStats(pollIntervalMs = 30000) {
     try {
       const res = await fetch(`${API_URL}/api/stats`)
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      stats.value = await res.json()
+      const text = await res.text()
+      if (!text) throw new Error('Empty response')
+      try {
+        stats.value = JSON.parse(text)
+      } catch {
+        throw new Error(`Invalid JSON: ${text.slice(0, 200)}`)
+      }
     } catch (e: any) {
-      error.value = e.message
+      error.value = `Stats-Fehler: ${e.message}`
       console.error('Stats fetch failed:', e)
     } finally {
       loading.value = false
