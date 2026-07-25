@@ -11,6 +11,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.1.18
         version: 4.3.2(vite@8.1.0(@types/node@24.13.3)(jiti@2.7.0))
+      '@yeger/vue-masonry-wall':
+        specifier: ^6.1.4
+        version: 6.1.4(vue@3.5.39(typescript@5.9.3))
       firebase:
         specifier: ^12.8.0
         version: 12.16.0
@@ -1247,6 +1250,14 @@ packages:
         optional: true
       vue:
         optional: true
+
+  '@yeger/debounce@2.0.20':
+    resolution: {integrity: sha512-vvHS5wMR2MHCXLGcOzcbYR//ZVKpy16LAjzWh9ZLO2ozre8BlF60W7eDGFR/F+pCGPBsLQHzX6pGvt73IQQasA==}
+
+  '@yeger/vue-masonry-wall@6.1.4':
+    resolution: {integrity: sha512-ApJO9NRuYOT8GvjNfz3RHiJ28E1gNPycn5e8liDPhtv8JM8q74UPDWCZ8CVBNvXju6SYELAMAG/svbK7mpV24A==}
+    peerDependencies:
+      vue: ^3.5.19
 
   abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
@@ -3975,6 +3986,13 @@ snapshots:
   '@vue/tsconfig@0.8.1(typescript@5.9.3)(vue@3.5.39(typescript@5.9.3))':
     optionalDependencies:
       typescript: 5.9.3
+      vue: 3.5.39(typescript@5.9.3)
+
+  '@yeger/debounce@2.0.20': {}
+
+  '@yeger/vue-masonry-wall@6.1.4(vue@3.5.39(typescript@5.9.3))':
+    dependencies:
+      '@yeger/debounce': 2.0.20
       vue: 3.5.39(typescript@5.9.3)
 
   abort-controller@3.0.0:

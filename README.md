@@ -1,5 +1,9 @@
 # .
+!HochZeit#2026SOP
+21:18
 
+
+3CMZSC4C
 This template should help get you started developing with Vue 3 in Vite.
 
 ## Recommended IDE Setup

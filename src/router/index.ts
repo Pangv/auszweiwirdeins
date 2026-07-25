@@ -7,35 +7,34 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: Home,
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/Login.vue')
+      component: () => import('../views/Login.vue'),
     },
     {
-  path: '/galerie',
-  name: 'gallery',
-  component: () => import('../views/Gallery.vue')
-},
-
+      path: '/galerie',
+      name: 'gallery',
+      component: () => import('../views/GalleryView.vue'),
+    },
     {
       path: '/admin',
       name: 'admin',
       component: () => import('../views/AdminDashboard.vue'),
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true },
     },
     {
       path: '/impressum',
       name: 'imprint',
-      component: () => import('../views/Imprint.vue')
+      component: () => import('../views/Imprint.vue'),
     },
     {
       path: '/datenschutz',
       name: 'privacy',
-      component: () => import('../views/Privacy.vue')
-    }
+      component: () => import('../views/Privacy.vue'),
+    },
   ],
   scrollBehavior(to) {
     // if (savedPosition) return savedPosition;
@@ -43,13 +42,13 @@ const router = createRouter({
     if (to.hash) {
       return {
         el: to.hash,
-        behavior: "smooth",
+        behavior: 'smooth',
         top: 0, // optionaler Offset (s.u.)
-      };
+      }
     }
 
-    return {top: 0};
-  }
+    return { top: 0 }
+  },
 })
 
 // Navigation Guard
@@ -63,7 +62,7 @@ const getCurrentUser = async () => {
         removeListener()
         resolve(user)
       },
-      reject
+      reject,
     )
   })
 }
