@@ -1,0 +1,274 @@
+openapi: 3.1.0
+info:
+  title: Galerie API
+  version: 1.0.0
+  description: Photo gallery backend with pagination, upload, and management.
+servers:
+  - url: https://auszweiwirdeins.de
+    description: Production
+  - url: http://localhost:3000
+    description: Local development
+
+paths:
+  /api/photos:
+    get:
+      summary: List photos (paginated)
+      description: Returns photos ordered by creation date descending.
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+          description: Number of photos to return (max 100)
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Number of photos to skip
+      responses:
+        '200':
+          description: Paginated photo list
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [total, limit, offset, photos]
+                properties:
+                  total:
+                    type: integer
+                    description: Total number of photos in the gallery
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+                  photos:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Photo'
+      x-code-samples:
+        - lang: JavaScript
+          source: |
+            // Load next page (infinite scroll / load-more)
+            const pageSize = 50;
+            async function loadPhotos(offset) {
+              const res = await fetch(`/api/photos?limit=${pageSize}&offset=${offset}`);
+              return res.json();
+            }
+            // Usage:
+            const firstPage = await loadPhotos(0);
+            const nextPage  = await loadPhotos(firstPage.photos.length);
+
+    delete:
+      summary: Bulk delete photos
+      description: Deletes multiple photos owned by the requester. Accepts up to 200 IDs.
+      parameters:
+        - name: X-Owner-Id
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ids]
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                  maxItems: 200
+      responses:
+        '200':
+          description: Deletion result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  deleted:
+                    type: array
+                    items:
+                      type: string
+                  failed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        reason:
+                          type: string
+                          enum: [not_found, forbidden]
+                  deletedCount:
+                    type: integer
+                  failedCount:
+                    type: integer
+
+  /api/photos/{id}:
+    delete:
+      summary: Delete a single photo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: X-Owner-Id
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Photo deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '403':
+          description: Forbidden – not the owner
+        '404':
+          description: Photo not found
+
+  /api/upload:
+    post:
+      summary: Upload photos
+      description: Upload up to 20 image files. Requires password and owner-ID headers.
+      parameters:
+        - name: X-Upload-Password
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: X-Owner-Id
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                photos:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: Image files (JPEG, PNG, WebP, etc.)
+      responses:
+        '200':
+          description: Upload result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  uploaded:
+                    type: integer
+                  photos:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        filename:
+                          type: string
+                        thumb:
+                          type: string
+        '401':
+          description: Wrong password
+        '413':
+          description: File too large (max 20 MB)
+
+  /api/stats:
+    get:
+      summary: Gallery statistics
+      responses:
+        '200':
+          description: Gallery stats
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalPhotos:
+                    type: integer
+                  totalSizeBytes:
+                    type: integer
+                  maxSizeBytes:
+                    type: integer
+                  usedPercent:
+                    type: number
+                  totalSizeGb:
+                    type: number
+                  maxSizeGb:
+                    type: number
+
+  /api/storage:
+    get:
+      summary: Server disk usage
+      responses:
+        '200':
+          description: Disk usage info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalGb:
+                    type: number
+                  usedGb:
+                    type: number
+                  freeGb:
+                    type: number
+                  usedPercent:
+                    type: number
+                  freePercent:
+                    type: number
+
+components:
+  schemas:
+    Photo:
+      type: object
+      required: [id, filename, thumb, owner_id, size, created_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        filename:
+          type: string
+        thumb:
+          type: string
+        owner_id:
+          type: string
+        size:
+          type: integer
+          description: File size in bytes (original + thumbnail)
+        created_at:
+          type: string
+          format: date-time
+        taken_at:
+          type: string
+          format: date-time
+          nullable: true

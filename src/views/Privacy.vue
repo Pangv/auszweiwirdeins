@@ -3,7 +3,7 @@ import Footer from "../components/Footer.vue";
 </script>
 
 <template>
-  <div class="">
+  <div class="p-2">
     <div>
       <h1 class="text-3xl">Datenschutzerklärung</h1>
     </div>
@@ -12,14 +12,11 @@ import Footer from "../components/Footer.vue";
       <p>
         Wir haben diese Datenschutzerklärung (Fassung 16.04.2023-312475526) verfasst, um Ihnen gemäß der Vorgaben der{'
         '}
-        <a
-          class="pb-1 font-bold"
+        <a class="pb-1 font-bold"
           href="https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32016R0679&amp;from=DE&amp;tid=312475526#d1e2269-1-1"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Datenschutz-Grundverordnung (EU) 2016/679 </a
-        >{' '} und anwendbaren nationalen Gesetzen zu erklären, welche personenbezogenen Daten (kurz Daten) wir als
+          target="_blank" rel="noreferrer">
+          Datenschutz-Grundverordnung (EU) 2016/679 </a>{' '} und anwendbaren nationalen Gesetzen zu erklären, welche
+        personenbezogenen Daten (kurz Daten) wir als
         Verantwortliche &#8211; und die von uns beauftragten Auftragsverarbeiter (z. B. Provider) &#8211; verarbeiten,
         zukünftig verarbeiten werden und welche rechtmäßigen Möglichkeiten Sie haben. Die verwendeten Begriffe sind
         geschlechtsneutral zu verstehen.
@@ -73,8 +70,7 @@ import Footer from "../components/Footer.vue";
         RATES vom 27. April 2016. Diese Datenschutz-Grundverordnung der EU können Sie selbstverständlich online auf
         EUR-Lex, dem Zugang zum EU-Recht, unter{' '}
         <a class="pb-1 font-bold" href="https://eur-lex.europa.eu/legal-content/DE/ALL/?uri=celex%3A32016R0679">
-          https://eur-lex.europa.eu/legal-content/DE/ALL/?uri=celex%3A32016R0679 </a
-        >{' '} nachlesen.
+          https://eur-lex.europa.eu/legal-content/DE/ALL/?uri=celex%3A32016R0679 </a>{' '} nachlesen.
       </p>
       <p>Wir verarbeiten Ihre Daten nur, wenn mindestens eine der folgenden Bedingungen zutrifft:</p>
       <ol>
@@ -245,17 +241,13 @@ import Footer from "../components/Footer.vue";
         datenschutzrechtlichen Ansprüche in sonst einer Weise verletzt worden sind, können Sie sich bei der
         Aufsichtsbehörde beschweren. Diese ist für Österreich die Datenschutzbehörde, deren Website Sie unter{' '}
         <a class="pb-1 font-bold" href="https://www.dsb.gv.at/?tid=312475526" target="_blank" rel="noreferrer">
-          https://www.dsb.gv.at/ </a
-        >{' '} finden. In Deutschland gibt es für jedes Bundesland einen Datenschutzbeauftragten. Für nähere
+          https://www.dsb.gv.at/ </a>{' '} finden. In Deutschland gibt es für jedes Bundesland einen
+        Datenschutzbeauftragten. Für nähere
         Informationen können Sie sich an die{' '}
-        <a
-          class="pb-1 font-bold"
-          href="https://www.bfdi.bund.de/DE/Home/home_node.html"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Bundesbeauftragte für den Datenschutz und die Informationsfreiheit (BfDI) </a
-        >{' '} wenden. Für unser Unternehmen ist die folgende lokale Datenschutzbehörde zuständig:
+        <a class="pb-1 font-bold" href="https://www.bfdi.bund.de/DE/Home/home_node.html" target="_blank"
+          rel="noreferrer">
+          Bundesbeauftragte für den Datenschutz und die Informationsfreiheit (BfDI) </a>{' '} wenden. Für unser
+        Unternehmen ist die folgende lokale Datenschutzbehörde zuständig:
       </p>
       <h2 id="datenuebertragung-drittlaender" class="pb-1 font-bold">Datenübertragung in Drittländer</h2>
       <p>
@@ -282,23 +274,23 @@ import Footer from "../components/Footer.vue";
       <h2 id="kommunikation" class="pb-1 font-bold">Kommunikation</h2>
       <table>
         <tbody>
-        <tr>
-          <td>
-            <strong class="pb-1 font-bold">Kommunikation Zusammenfassung</strong>
-            <br />
-            &#x1f465; Betroffene: Alle, die mit uns per Telefon, E-Mail oder Online-Formular kommunizieren
-            <br />
-            &#x1f4d3; Verarbeitete Daten: z. B. Telefonnummer, Name, E-Mail-Adresse, eingegebene Formulardaten. Mehr
-            Details dazu finden Sie bei der jeweils eingesetzten Kontaktart
-            <br />
-            &#x1f91d; Zweck: Abwicklung der Kommunikation mit Kunden, Geschäftspartnern usw.
-            <br />
-            &#x1f4c5; Speicherdauer: Dauer des Geschäftsfalls und der gesetzlichen Vorschriften
-            <br />
-            &#x2696;&#xfe0f; Rechtsgrundlagen: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung), Art. 6 Abs. 1 lit. b DSGVO
-            (Vertrag), Art. 6 Abs. 1 lit. f DSGVO (Berechtigte Interessen)
-          </td>
-        </tr>
+          <tr>
+            <td>
+              <strong class="pb-1 font-bold">Kommunikation Zusammenfassung</strong>
+              <br />
+              &#x1f465; Betroffene: Alle, die mit uns per Telefon, E-Mail oder Online-Formular kommunizieren
+              <br />
+              &#x1f4d3; Verarbeitete Daten: z. B. Telefonnummer, Name, E-Mail-Adresse, eingegebene Formulardaten. Mehr
+              Details dazu finden Sie bei der jeweils eingesetzten Kontaktart
+              <br />
+              &#x1f91d; Zweck: Abwicklung der Kommunikation mit Kunden, Geschäftspartnern usw.
+              <br />
+              &#x1f4c5; Speicherdauer: Dauer des Geschäftsfalls und der gesetzlichen Vorschriften
+              <br />
+              &#x2696;&#xfe0f; Rechtsgrundlagen: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung), Art. 6 Abs. 1 lit. b DSGVO
+              (Vertrag), Art. 6 Abs. 1 lit. f DSGVO (Berechtigte Interessen)
+            </td>
+          </tr>
         </tbody>
       </table>
       <p>
@@ -356,24 +348,24 @@ import Footer from "../components/Footer.vue";
       <h2 id="cookies" class="pb-1 font-bold">Cookies</h2>
       <table>
         <tbody>
-        <tr>
-          <td>
-            <strong class="pb-1 font-bold">Cookies Zusammenfassung</strong>
-            <br />
-            &#x1f465; Betroffene: Besucher der Website
-            <br />
-            &#x1f91d; Zweck: abhängig vom jeweiligen Cookie. Mehr Details dazu finden Sie weiter unten bzw. beim
-            Hersteller der Software, der das Cookie setzt.
-            <br />
-            &#x1f4d3; Verarbeitete Daten: Abhängig vom jeweils eingesetzten Cookie. Mehr Details dazu finden Sie
-            weiter unten bzw. beim Hersteller der Software, der das Cookie setzt.
-            <br />
-            &#x1f4c5; Speicherdauer: abhängig vom jeweiligen Cookie, kann von Stunden bis hin zu Jahren variieren
-            <br />
-            &#x2696;&#xfe0f; Rechtsgrundlagen: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung), Art. 6 Abs. 1 lit.f DSGVO
-            (Berechtigte Interessen)
-          </td>
-        </tr>
+          <tr>
+            <td>
+              <strong class="pb-1 font-bold">Cookies Zusammenfassung</strong>
+              <br />
+              &#x1f465; Betroffene: Besucher der Website
+              <br />
+              &#x1f91d; Zweck: abhängig vom jeweiligen Cookie. Mehr Details dazu finden Sie weiter unten bzw. beim
+              Hersteller der Software, der das Cookie setzt.
+              <br />
+              &#x1f4d3; Verarbeitete Daten: Abhängig vom jeweils eingesetzten Cookie. Mehr Details dazu finden Sie
+              weiter unten bzw. beim Hersteller der Software, der das Cookie setzt.
+              <br />
+              &#x1f4c5; Speicherdauer: abhängig vom jeweiligen Cookie, kann von Stunden bis hin zu Jahren variieren
+              <br />
+              &#x2696;&#xfe0f; Rechtsgrundlagen: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung), Art. 6 Abs. 1 lit.f DSGVO
+              (Berechtigte Interessen)
+            </td>
+          </tr>
         </tbody>
       </table>
       <h3 class="pb-1 font-bold">Was sind Cookies?</h3>
@@ -520,48 +512,33 @@ import Footer from "../components/Footer.vue";
         ändern oder löschen wollen, können Sie dies in Ihren Browser-Einstellungen finden:
       </p>
       <p>
-        <a
-          class="pb-1 font-bold"
-          href="https://support.google.com/chrome/answer/95647?tid=312475526"
-          target="_blank"
-          rel="noreferrer noreferrer"
-        >
+        <a class="pb-1 font-bold" href="https://support.google.com/chrome/answer/95647?tid=312475526" target="_blank"
+          rel="noreferrer noreferrer">
           Chrome: Cookies in Chrome löschen, aktivieren und verwalten
         </a>
       </p>
       <p>
-        <a
-          class="pb-1 font-bold"
-          href="https://support.apple.com/de-at/guide/safari/sfri11471/mac?tid=312475526"
-          target="_blank"
-          rel="noreferrer noreferrer"
-        >
+        <a class="pb-1 font-bold" href="https://support.apple.com/de-at/guide/safari/sfri11471/mac?tid=312475526"
+          target="_blank" rel="noreferrer noreferrer">
           Safari: Verwalten von Cookies und Websitedaten mit Safari
         </a>
       </p>
       <p>
-        <a
-          class="pb-1 font-bold"
+        <a class="pb-1 font-bold"
           href="https://support.mozilla.org/de/kb/cookies-und-website-daten-in-firefox-loschen?tid=312475526"
-          target="_blank"
-          rel="noreferrer noreferrer"
-        >
+          target="_blank" rel="noreferrer noreferrer">
           Firefox: Cookies löschen, um Daten zu entfernen, die Websites auf Ihrem Computer abgelegt haben
         </a>
       </p>
       <p>
-        <a
-          class="pb-1 font-bold"
-          href="https://support.microsoft.com/de-de/windows/l%C3%B6schen-und-verwalten-von-cookies-168dab11-0753-043d-7c16-ede5947fc64d?tid=312475526"
-        >
+        <a class="pb-1 font-bold"
+          href="https://support.microsoft.com/de-de/windows/l%C3%B6schen-und-verwalten-von-cookies-168dab11-0753-043d-7c16-ede5947fc64d?tid=312475526">
           Internet Explorer: Löschen und Verwalten von Cookies
         </a>
       </p>
       <p>
-        <a
-          class="pb-1 font-bold"
-          href="https://support.microsoft.com/de-de/microsoft-edge/cookies-in-microsoft-edge-l%C3%B6schen-63947406-40ac-c3b8-57b9-2a946a29ae09?tid=312475526"
-        >
+        <a class="pb-1 font-bold"
+          href="https://support.microsoft.com/de-de/microsoft-edge/cookies-in-microsoft-edge-l%C3%B6schen-63947406-40ac-c3b8-57b9-2a946a29ae09?tid=312475526">
           Microsoft Edge: Löschen und Verwalten von Cookies
         </a>
       </p>
@@ -598,26 +575,26 @@ import Footer from "../components/Footer.vue";
       <h2 id="kundendaten" class="pb-1 font-bold">Kundendaten</h2>
       <table>
         <tbody>
-        <tr>
-          <td>
-            <strong class="pb-1 font-bold">Kundendaten Zusammenfassung</strong>
-            <br />
-            &#x1f465; Betroffene: Kunden bzw. Geschäfts- und Vertragspartner
-            <br />
-            &#x1f91d; Zweck: Erbringung der vertraglich oder vorvertraglich vereinbarten Leistungen einschließlich
-            zugehörige Kommunikation
-            <br />
-            &#x1f4d3; Verarbeitete Daten: Name, Adresse, Kontaktdaten, E-Mail-Adresse, Telefonnummer,
-            Zahlungsinformationen (wie z. B. Rechnungen und Bankdaten), Vertragsdaten (wie z. B. Laufzeit und
-            Gegenstand des Vertrags), IP-Adresse, Bestelldaten
-            <br />
-            &#x1f4c5; Speicherdauer: die Daten werden gelöscht, sobald sie zur Erbringung unserer geschäftlichen
-            Zwecke nicht mehr erforderlich sind und es keine gesetzliche Aufbewahrungspflicht gibt.
-            <br />
-            &#x2696;&#xfe0f; Rechtsgrundlagen: Berechtigtes Interesse (Art. 6 Abs. 1 lit. f DSGVO), Vertrag (Art. 6
-            Abs 1 lit. b DSGVO)
-          </td>
-        </tr>
+          <tr>
+            <td>
+              <strong class="pb-1 font-bold">Kundendaten Zusammenfassung</strong>
+              <br />
+              &#x1f465; Betroffene: Kunden bzw. Geschäfts- und Vertragspartner
+              <br />
+              &#x1f91d; Zweck: Erbringung der vertraglich oder vorvertraglich vereinbarten Leistungen einschließlich
+              zugehörige Kommunikation
+              <br />
+              &#x1f4d3; Verarbeitete Daten: Name, Adresse, Kontaktdaten, E-Mail-Adresse, Telefonnummer,
+              Zahlungsinformationen (wie z. B. Rechnungen und Bankdaten), Vertragsdaten (wie z. B. Laufzeit und
+              Gegenstand des Vertrags), IP-Adresse, Bestelldaten
+              <br />
+              &#x1f4c5; Speicherdauer: die Daten werden gelöscht, sobald sie zur Erbringung unserer geschäftlichen
+              Zwecke nicht mehr erforderlich sind und es keine gesetzliche Aufbewahrungspflicht gibt.
+              <br />
+              &#x2696;&#xfe0f; Rechtsgrundlagen: Berechtigtes Interesse (Art. 6 Abs. 1 lit. f DSGVO), Vertrag (Art. 6
+              Abs 1 lit. b DSGVO)
+            </td>
+          </tr>
         </tbody>
       </table>
       <h3 class="pb-1 font-bold">Was sind Kundendaten?</h3>
@@ -686,22 +663,22 @@ import Footer from "../components/Footer.vue";
       <h2 id="webhosting-einleitung" class="pb-1 font-bold">Webhosting Einleitung</h2>
       <table>
         <tbody>
-        <tr>
-          <td>
-            <strong class="pb-1 font-bold">Webhosting Zusammenfassung</strong>
-            <br />
-            &#x1f465; Betroffene: Besucher der Website
-            <br />
-            &#x1f91d; Zweck: professionelles Hosting der Website und Absicherung des Betriebs
-            <br />
-            &#x1f4d3; Verarbeitete Daten: IP-Adresse, Zeitpunkt des Websitebesuchs, verwendeter Browser und weitere
-            Daten. Mehr Details dazu finden Sie weiter unten bzw. beim jeweils eingesetzten Webhosting Provider.
-            <br />
-            &#x1f4c5; Speicherdauer: abhängig vom jeweiligen Provider, aber in der Regel 2 Wochen
-            <br />
-            &#x2696;&#xfe0f; Rechtsgrundlagen: Art. 6 Abs. 1 lit.f DSGVO (Berechtigte Interessen)
-          </td>
-        </tr>
+          <tr>
+            <td>
+              <strong class="pb-1 font-bold">Webhosting Zusammenfassung</strong>
+              <br />
+              &#x1f465; Betroffene: Besucher der Website
+              <br />
+              &#x1f91d; Zweck: professionelles Hosting der Website und Absicherung des Betriebs
+              <br />
+              &#x1f4d3; Verarbeitete Daten: IP-Adresse, Zeitpunkt des Websitebesuchs, verwendeter Browser und weitere
+              Daten. Mehr Details dazu finden Sie weiter unten bzw. beim jeweils eingesetzten Webhosting Provider.
+              <br />
+              &#x1f4c5; Speicherdauer: abhängig vom jeweiligen Provider, aber in der Regel 2 Wochen
+              <br />
+              &#x2696;&#xfe0f; Rechtsgrundlagen: Art. 6 Abs. 1 lit.f DSGVO (Berechtigte Interessen)
+            </td>
+          </tr>
         </tbody>
       </table>
       <h3 class="pb-1 font-bold">Was ist Webhosting?</h3>
@@ -756,12 +733,8 @@ import Footer from "../components/Footer.vue";
         <li class="pb-1 font-bold">das verwendete Betriebssystem (z. B. Windows 10)</li>
         <li class="pb-1 font-bold">
           die Adresse (URL) der zuvor besuchten Seite (Referrer URL) (z. B.{' '}
-          <a
-            class="pb-1 font-bold"
-            href="https://www.beispielquellsite.de/vondabinichgekommen/"
-            target="_blank"
-            rel="follow noreferrer"
-          >
+          <a class="pb-1 font-bold" href="https://www.beispielquellsite.de/vondabinichgekommen/" target="_blank"
+            rel="follow noreferrer">
             https://www.beispielquellsite.de/vondabinichgekommen/
           </a>
           )
@@ -825,24 +798,16 @@ import Footer from "../components/Footer.vue";
         Google hält einen Vertrag über die Auftragsverarbeitung gemäß Art. 28 DSGVO bereit, der als
         datenschutzrechtliche Grundlage für unsere Kundenbeziehung zu Google fungiert. Dieser verweist inhaltlich auf
         die EU-Standardvertragsklauseln. Hier finden Sie die Auftragsverarbeitungsbedingungen:{' '}
-        <a
-          class="pb-1 font-bold"
-          href="https://business.safety.google/intl/de/adsprocessorterms/"
-          target="_blank"
-          rel="follow noreferrer"
-        >
+        <a class="pb-1 font-bold" href="https://business.safety.google/intl/de/adsprocessorterms/" target="_blank"
+          rel="follow noreferrer">
           https://business.safety.google/intl/de/adsprocessorterms/
         </a>
       </p>
       <p>
         Mehr über die Daten, die durch die Verwendung von Firebase verarbeitet werden, erfahren Sie in der Privacy
         Policy auf{' '}
-        <a
-          class="pb-1 font-bold"
-          href="https://policies.google.com/privacy?hl=en-US?tid=312475526"
-          target="_blank"
-          rel="noreferrer"
-        >
+        <a class="pb-1 font-bold" href="https://policies.google.com/privacy?hl=en-US?tid=312475526" target="_blank"
+          rel="noreferrer">
           https://policies.google.com/privacy?hl=en-US
         </a>
         .
@@ -850,24 +815,24 @@ import Footer from "../components/Footer.vue";
       <h2 id="web-analytics-einleitung" class="pb-1 font-bold">Web Analytics Einleitung</h2>
       <table>
         <tbody>
-        <tr>
-          <td>
-            <strong class="pb-1 font-bold">Web Analytics Datenschutzerklärung Zusammenfassung</strong>
-            <br />
-            &#x1f465; Betroffene: Besucher der Website
-            <br />
-            &#x1f91d; Zweck: Auswertung der Besucherinformationen zur Optimierung des Webangebots.
-            <br />
-            &#x1f4d3; Verarbeitete Daten: Zugriffsstatistiken, die Daten wie Standorte der Zugriffe, Gerätedaten,
-            Zugriffsdauer und Zeitpunkt, Navigationsverhalten, Klickverhalten und IP-Adressen enthalten. Mehr Details
-            dazu finden Sie beim jeweils eingesetzten Web Analytics Tool.
-            <br />
-            &#x1f4c5; Speicherdauer: abhängig vom eingesetzten Web-Analytics-Tool
-            <br />
-            &#x2696;&#xfe0f; Rechtsgrundlagen: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung), Art. 6 Abs. 1 lit. f DSGVO
-            (Berechtigte Interessen)
-          </td>
-        </tr>
+          <tr>
+            <td>
+              <strong class="pb-1 font-bold">Web Analytics Datenschutzerklärung Zusammenfassung</strong>
+              <br />
+              &#x1f465; Betroffene: Besucher der Website
+              <br />
+              &#x1f91d; Zweck: Auswertung der Besucherinformationen zur Optimierung des Webangebots.
+              <br />
+              &#x1f4d3; Verarbeitete Daten: Zugriffsstatistiken, die Daten wie Standorte der Zugriffe, Gerätedaten,
+              Zugriffsdauer und Zeitpunkt, Navigationsverhalten, Klickverhalten und IP-Adressen enthalten. Mehr Details
+              dazu finden Sie beim jeweils eingesetzten Web Analytics Tool.
+              <br />
+              &#x1f4c5; Speicherdauer: abhängig vom eingesetzten Web-Analytics-Tool
+              <br />
+              &#x2696;&#xfe0f; Rechtsgrundlagen: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung), Art. 6 Abs. 1 lit. f DSGVO
+              (Berechtigte Interessen)
+            </td>
+          </tr>
         </tbody>
       </table>
       <h3 class="pb-1 font-bold">Was ist Web Analytics?</h3>
@@ -921,11 +886,8 @@ import Footer from "../components/Footer.vue";
         Jahre speichern.
       </p>
       <h3 class="pb-1 font-bold">
-        <span
-          class="pb-1 font-bold"
-          data-sheets-value='{"1":2,"2":"Wo und wie lange werden Daten gespeichert?"}'
-          data-sheets-userformat='{"2":769,"3":{"1":0},"11":4,"12":0}'
-        >
+        <span class="pb-1 font-bold" data-sheets-value='{"1":2,"2":"Wo und wie lange werden Daten gespeichert?"}'
+          data-sheets-userformat='{"2":769,"3":{"1":0},"11":4,"12":0}'>
           Dauer der Datenverarbeitung
         </span>
       </h3>
@@ -995,12 +957,8 @@ import Footer from "../components/Footer.vue";
       <p>
         Die Google Ads Datenverarbeitungsbedingungen (Google Ads Data Processing Terms), welche auf die
         Standardvertragsklauseln verweisen, finden Sie unter{' '}
-        <a
-          class="pb-1 font-bold"
-          href="https://business.safety.google/intl/de/adsprocessorterms/"
-          target="_blank"
-          rel="follow noreferrer"
-        >
+        <a class="pb-1 font-bold" href="https://business.safety.google/intl/de/adsprocessorterms/" target="_blank"
+          rel="follow noreferrer">
           https://business.safety.google/intl/de/adsprocessorterms/
         </a>
         .
@@ -1008,12 +966,8 @@ import Footer from "../components/Footer.vue";
       <p>
         Mehr über die Daten, die durch die Verwendung von Firebase verarbeitet werden, erfahren Sie in der Privacy
         Policy auf{' '}
-        <a
-          class="pb-1 font-bold"
-          href="https://policies.google.com/privacy?hl=de"
-          target="_blank"
-          rel="follow noreferrer"
-        >
+        <a class="pb-1 font-bold" href="https://policies.google.com/privacy?hl=de" target="_blank"
+          rel="follow noreferrer">
           https://policies.google.com/privacy?hl=de
         </a>
         .
@@ -1021,12 +975,9 @@ import Footer from "../components/Footer.vue";
       <p>Alle Texte sind urheberrechtlich geschützt.</p>
       <p>
         Quelle: Erstellt mit dem{' '}
-        <a
-          href="https://www.adsimple.de/datenschutz-generator/"
-          title="Datenschutz Generator von AdSimple für Deutschland"
-        >
-          Datenschutz Generator </a
-        >{' '} von AdSimple
+        <a href="https://www.adsimple.de/datenschutz-generator/"
+          title="Datenschutz Generator von AdSimple für Deutschland">
+          Datenschutz Generator </a>{' '} von AdSimple
       </p>
     </div>
   </div>

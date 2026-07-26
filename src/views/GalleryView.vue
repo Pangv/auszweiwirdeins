@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen flex flex-col">
-    <div class="section-padding max-w-6xl mx-auto flex-1">
+    <div class="section-padding imx-auto flex-1">
       <h1 class="heading-huge text-primary fancy mb-10">Galerie</h1>
       <p class="mb-8 text-lg max-w-2xl">
         Teilt eure schönsten Momente mit uns! Ladet eure Fotos hoch – so entsteht gemeinsam unser
@@ -117,8 +117,29 @@
           :sort-field="sortField"
           :sort-dir="sortDir"
           @toggle-select="toggleSelect"
-          @photo-click="handlePhotoClick"
+          @photo-click="wrappedPhotoClick"
         />
+
+        <div v-if="totalPages > 1" class="flex items-center justify-center gap-3 mt-8 mb-6">
+          <button
+            class="px-4 py-2 text-sm font-bold rounded-full border border-accent/40 transition-colors disabled:opacity-30"
+            :class="currentPage === 1 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-accent/10'"
+            :disabled="currentPage === 1"
+            @click="setPage(currentPage - 1)">
+            ← Zurück
+          </button>
+          <span class="text-sm font-mono opacity-70">
+            Seite {{ currentPage }} / {{ totalPages }}
+            <span class="opacity-50">({{ totalPhotos }} Fotos)</span>
+          </span>
+          <button
+            class="px-4 py-2 text-sm font-bold rounded-full border border-accent/40 transition-colors disabled:opacity-30"
+            :class="currentPage === totalPages ? 'opacity-30 cursor-not-allowed' : 'hover:bg-accent/10'"
+            :disabled="currentPage === totalPages"
+            @click="setPage(currentPage + 1)">
+            Weiter →
+          </button>
+        </div>
 
         <BulkActionBar
           :selected-count="selectedIds.size"
@@ -172,8 +193,9 @@ const {
   deletingIds, storageUsed, storageTotal,
   showOnlyMine, sortField, sortDir,
   selectedIds, canDeleteAny, masonryColWidth, isDev,
-  loadPhotos, handleUpload, deleteSelected, downloadSelected, downloadPhoto,
-  loadStorage, toggleSelect, handlePhotoClick,
+  currentPage, totalPhotos, totalPages,
+  loadPhotos, setPage, handleUpload, deleteSelected, downloadSelected, downloadPhoto,
+  loadStorage, toggleSelect,
 } = usePhotoManagement(password, ownerId)
 
 const {
@@ -189,7 +211,6 @@ const { dragOver, onDragOver, onDragLeave, onDrop } = useDragDrop((files) => {
   })
 })
 
-const originalPhotoClick = handlePhotoClick
 function wrappedPhotoClick(photo: any) {
   if (selectedIds.value.size > 0) {
     toggleSelect(photo.id)

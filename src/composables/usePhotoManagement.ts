@@ -2,6 +2,8 @@ import { ref, computed } from 'vue'
 import type { Photo } from '../types/gallery'
 import { API, loadPhotos as apiLoadPhotos, uploadFiles, deletePhotos, loadStorage as apiLoadStorage } from '../services/galleryApi'
 
+const PAGE_SIZE = 100
+
 export function usePhotoManagement(password: { value: string }, ownerId: { value: string }) {
   const photos = ref<Photo[]>([])
   const loading = ref(false)
@@ -21,6 +23,10 @@ export function usePhotoManagement(password: { value: string }, ownerId: { value
   const sortDir = ref<'asc' | 'desc'>('desc')
 
   const selectedIds = ref<Set<string>>(new Set())
+
+  const currentPage = ref(1)
+  const totalPhotos = ref(0)
+  const totalPages = computed(() => Math.max(1, Math.ceil(totalPhotos.value / PAGE_SIZE)))
 
   const isDev = import.meta.env.DEV
 
@@ -64,13 +70,23 @@ export function usePhotoManagement(password: { value: string }, ownerId: { value
     loading.value = true
     errorMsg.value = ''
     try {
-      photos.value = await apiLoadPhotos()
+      const offset = (currentPage.value - 1) * PAGE_SIZE
+      const data = await apiLoadPhotos(PAGE_SIZE, offset)
+      photos.value = data.photos ?? []
+      totalPhotos.value = data.total
     } catch (e: unknown) {
       console.error('loadPhotos:', e)
       errorMsg.value = 'Fotos konnten nicht geladen werden.'
     } finally {
       loading.value = false
     }
+  }
+
+  function setPage(page: number): void {
+    if (page < 1 || page > totalPages.value || page === currentPage.value) return
+    currentPage.value = page
+    selectedIds.value = new Set()
+    loadPhotos()
   }
 
   async function handleUpload(e: Event): Promise<void> {
@@ -181,7 +197,12 @@ export function usePhotoManagement(password: { value: string }, ownerId: { value
     canDeleteAny,
     masonryColWidth,
     isDev,
+    currentPage,
+    totalPhotos,
+    totalPages,
+    PAGE_SIZE,
     loadPhotos,
+    setPage,
     handleUpload,
     deleteSelected,
     downloadSelected,

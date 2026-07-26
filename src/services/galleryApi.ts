@@ -16,11 +16,10 @@ export async function verifyPassword(password: string, ownerId: string): Promise
   return true
 }
 
-export async function loadPhotos(): Promise<Photo[]> {
-  const res = await fetch(`${API}/api/photos?limit=100`)
+export async function loadPhotos(limit = 100, offset = 0): Promise<{ photos: Photo[]; total: number }> {
+  const res = await fetch(`${API}/api/photos?limit=${limit}&offset=${offset}`)
   if (!res.ok) throw new Error('Laden fehlgeschlagen')
-  const data: { photos: Photo[] } = await res.json()
-  return data.photos ?? []
+  return res.json() as Promise<{ photos: Photo[]; total: number }>
 }
 
 export async function uploadFiles(

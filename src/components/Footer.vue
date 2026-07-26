@@ -1,13 +1,21 @@
 <template>
-  <footer class="bg-accent py-12 px-5 text-left md:text-center">
-    <img src="" alt="">
+  <footer class="bg-accent py-12 px-5 text-left flex justify-between md:text-center">
+    <h2 class="text-[clamp(3rem,12vw,6rem)] text-secondary font-extrabold leading-none text-left">
+      <slot>Wir sehen uns</slot>
+      <a href="#/admin" aria-label="Admin Dashboard"
+        class="inline-block align-baseline text-secondary no-underline hover:opacity-0 focus:opacity-0 active:opacity-0 select-none pointer-events-auto">!</a>
+    </h2>
+
     <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
       <div class="w-full md:w-auto text-left md:text-right">
         <div>
           <a href="mailto:hello@auszweiwirdeins.de">hello@auszweiwirdeins.de</a>
         </div>
-        <RouterLink to="/galerie" class="hover:text-accent transition-colors">
+        <RouterLink to="/galerie" class="hover:text-accent transition-colors block">
           Galerie
+        </RouterLink>
+        <RouterLink to="/" class="hover:text-accent transition-colors block">
+          Startseite
         </RouterLink>
         <div>
           <RouterLink to="/impressum">Impressum</RouterLink>
@@ -17,11 +25,7 @@
         </div>
       </div>
     </div>
-    <h2 class="text-[clamp(3rem,12vw,6rem)] text-secondary font-extrabold leading-none text-left">
-      <slot>Wir sehen uns</slot>
-      <a href="#/admin" aria-label="Admin Dashboard"
-        class="inline-block align-baseline text-secondary no-underline hover:opacity-0 focus:opacity-0 active:opacity-0 select-none pointer-events-auto">!</a>
-    </h2>
+
 
 
   </footer>
