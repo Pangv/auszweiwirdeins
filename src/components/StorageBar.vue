@@ -1,4 +1,3 @@
-<!-- src/components/StorageBar.vue -->
 <template>
   <div class="storage-bar" v-if="stats">
     <div class="stats-row">
@@ -6,16 +5,16 @@
         {{ formatNumber(stats.totalPhotos) }} Fotos
       </span>
       <span class="size-info">
-        {{ stats.totalSizeGb.toFixed(2) }} / {{ stats.maxSizeGb }} GB
+        {{ formatSize(stats.totalSizeBytes) }} / {{ stats.maxSizeGb }} GB
       </span>
-      <span class="percent" :class="{ warning: stats.usedPercent > 80, danger: stats.usedPercent > 95 }">
-        {{ stats.usedPercent }}%
+      <span class="percent" :class="{ warning: usedPercent > 80, danger: usedPercent > 95 }">
+        {{ usedPercent }}%
       </span>
     </div>
 
     <div class="progress-track">
-      <div class="progress-fill" :style="{ width: `${Math.min(stats.usedPercent, 100)}%` }"
-        :class="{ warning: stats.usedPercent > 80, danger: stats.usedPercent > 95 }" />
+      <div class="progress-fill" :style="{ width: `${Math.min(usedPercent, 100)}%` }"
+        :class="{ warning: usedPercent > 80, danger: usedPercent > 95 }" />
     </div>
   </div>
 
@@ -29,13 +28,26 @@
 </template>
 
 <script setup lang="ts">
-import { useStats } from './useStats'
+import { computed } from 'vue'
+import { useStats } from '../composables/useStats'
 
 const { stats, error } = useStats()
-// Oder ohne Polling: const { stats, error, refresh } = useStats(0) + manuell refresh
+
+const usedPercent = computed(() => {
+  if (!stats.value || stats.value.maxSizeBytes <= 0) return 0
+  return Math.round((stats.value.totalSizeBytes / stats.value.maxSizeBytes) * 100)
+})
 
 function formatNumber(n: number): string {
   return n.toLocaleString('de-DE')
+}
+
+function formatSize(bytes: number): string {
+  const mb = bytes / 1024 / 1024
+  if (mb >= 1) return mb.toFixed(1) + ' MB'
+  const kb = bytes / 1024
+  if (kb >= 1) return kb.toFixed(0) + ' KB'
+  return bytes + ' B'
 }
 </script>
 
@@ -45,7 +57,6 @@ function formatNumber(n: number): string {
   font-size: 0.85rem;
   color: var(--text-muted, #666);
 }
-
 .stats-row {
   display: flex;
   justify-content: space-between;
@@ -53,61 +64,49 @@ function formatNumber(n: number): string {
   margin-bottom: 4px;
   gap: 8px;
 }
-
 .photos-count {
   font-weight: 500;
   color: var(--text-color, #222);
 }
-
 .size-info {
   flex: 1;
   text-align: right;
   opacity: 0.8;
 }
-
 .percent {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   min-width: 3em;
   text-align: right;
 }
-
 .percent.warning {
   color: #c8810a;
 }
-
 .percent.danger {
   color: #dc2626;
 }
-
 .progress-track {
   height: 6px;
   background: #e5e7eb;
   border-radius: 3px;
   overflow: hidden;
 }
-
 .progress-fill {
   height: 100%;
   background: #10b981;
-  /* emerald-500 */
   border-radius: 3px;
   transition: width 0.5s ease, background 0.3s ease;
 }
-
 .progress-fill.warning {
   background: #f59e0b;
 }
-
 .progress-fill.danger {
   background: #ef4444;
 }
-
 .error {
   color: #dc2626;
   cursor: help;
 }
-
 .loading {
   opacity: 0.5;
 }

@@ -1,4 +1,3 @@
-// src/composables/useStats.ts
 import { ref, onMounted, onUnmounted } from 'vue'
 
 export interface GalleryStats {
