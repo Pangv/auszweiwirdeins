@@ -9,7 +9,7 @@ export interface GalleryStats {
   maxSizeGb: number
 }
 
-const API_URL = import.meta.env.VITE_API_URL || ''
+const API_URL = import.meta.env.PROD ? 'https://galerie.auszweiwirdeins.de' : (import.meta.env.VITE_API_URL || '')
 
 export function useStats(pollIntervalMs = 30000) {
   const stats = ref<GalleryStats | null>(null)
