@@ -21,7 +21,7 @@
 
       <button
         class="mt-4 sm:mt-6 bg-primary text-secondary font-display px-6 sm:px-8 py-3 sm:py-2 rounded-full hover:bg-accent transition-colors w-full sm:w-auto text-sm sm:text-base"
-        @click.stop="$emit('download', getFilenameFromUrl(src))">
+        @click.stop="photo && $emit('download', photo)">
         ⬇️ Original herunterladen
       </button>
     </div>
@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import type { Photo } from '../types/gallery'
-import { getPhotoDateLabel, getPhotoSizeLabel, getFilenameFromUrl } from '../utils/format'
+import { getPhotoDateLabel, getPhotoSizeLabel } from '../utils/format'
 
 defineProps<{
   src: string | null
@@ -39,7 +39,7 @@ defineProps<{
 
 defineEmits<{
   close: []
-  download: [filename: string]
+  download: [photo: Photo]
   touchstart: [e: TouchEvent]
   touchend: [e: TouchEvent]
   click: []
