@@ -7,6 +7,8 @@ import {
   deletePhotos,
   deletePhotosAsAdmin,
   loadStorage as apiLoadStorage,
+  downloadSingle,
+  downloadBulk,
 } from '../services/galleryApi'
 import heic2any from 'heic2any'
 import exifr from 'exifr'
@@ -30,6 +32,10 @@ export function usePhotoManagement(
   const deletingIds = ref<Set<string>>(new Set())
   const storageUsed = ref(0)
   const storageTotal = ref(0)
+
+  // Download-States
+  const downloadingIds = ref<Set<string>>(new Set())
+  const downloadingBulk = ref(false)
 
   const showOnlyMine = ref(false)
   const sortField = ref<'taken_at' | 'created_at'>('taken_at')
@@ -73,6 +79,8 @@ export function usePhotoManagement(
     if (isDev) return selectedIds.value.size > 0
     return photos.value.some((p) => selectedIds.value.has(p.id) && p.owner_id === ownerId.value)
   })
+
+  const isDownloading = computed(() => downloadingIds.value.size > 0 || downloadingBulk.value)
 
   async function loadPhotos(): Promise<void> {
     loading.value = true
@@ -177,18 +185,63 @@ export function usePhotoManagement(
     }
   }
 
-  function downloadPhoto(filename: string): void {
-    const link = document.createElement('a')
-    link.href = `${API}/uploads/${filename}`
-    link.download = filename
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+  // === NEU: Einzeldownload über API ===
+  async function downloadPhoto(photo: Photo): Promise<void> {
+    if (downloadingIds.value.has(photo.id)) return
+
+    downloadingIds.value = new Set([...downloadingIds.value, photo.id])
+    errorMsg.value = ''
+
+    try {
+      await downloadSingle(photo.id, photo.filename.replace(/\.webp$/, '') + '.webp', ownerId.value)
+    } catch (e: unknown) {
+      console.error('Download fehlgeschlagen:', e)
+      errorMsg.value = `Download "${photo.filename}" fehlgeschlagen.`
+    } finally {
+      const next = new Set(downloadingIds.value)
+      next.delete(photo.id)
+      downloadingIds.value = next
+    }
   }
 
-  function downloadSelected(): void {
-    const selected = photos.value.filter((p) => selectedIds.value.has(p.id))
-    selected.forEach((photo) => downloadPhoto(photo.filename))
+  // === NEU: Bulk-ZIP-Download ===
+  async function downloadSelected(): Promise<void> {
+    const ids = Array.from(selectedIds.value)
+    if (ids.length === 0) return
+
+    if (ids.length === 1) {
+      // Einzelnes Foto direkt laden
+      const photo = photos.value.find((p) => p.id === ids[0])
+      if (photo) {
+        await downloadPhoto(photo)
+        return
+      }
+    }
+
+    // Mehrere Fotos als ZIP
+    downloadingBulk.value = true
+    errorMsg.value = ''
+
+    try {
+      await downloadBulk(ids, ownerId.value)
+      // Optional: Auswahl nach erfolgreichem Download leeren
+      // selectedIds.value = new Set()
+    } catch (e: unknown) {
+      console.error('Bulk-Download fehlgeschlagen:', e)
+      errorMsg.value = 'ZIP-Download fehlgeschlagen.'
+    } finally {
+      downloadingBulk.value = false
+    }
+  }
+
+  // Deprecated: Alte direkte URL-Download-Funktion entfernt
+  // Falls noch direkter Zugriff auf Thumbnails/Previews nötig:
+  function getPhotoUrl(photo: Photo): string {
+    return `${API}/uploads/${photo.filename}`
+  }
+
+  function getThumbnailUrl(photo: Photo): string {
+    return `${API}/thumbs/${photo.thumb}`
   }
 
   async function deleteSelected(): Promise<void> {
@@ -238,6 +291,9 @@ export function usePhotoManagement(
     uploadDone,
     uploadTotal,
     deletingIds,
+    downloadingIds,
+    downloadingBulk,
+    isDownloading,
     storageUsed,
     storageTotal,
     showOnlyMine,
@@ -255,11 +311,13 @@ export function usePhotoManagement(
     setPage,
     handleUpload,
     deleteSelected,
-    downloadSelected,
     downloadPhoto,
+    downloadSelected,
     loadStorage,
     toggleSelect,
     handlePhotoClick,
     photoBelongsToUser,
+    getPhotoUrl,
+    getThumbnailUrl,
   }
 }

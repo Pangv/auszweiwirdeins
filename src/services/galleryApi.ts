@@ -138,3 +138,64 @@ export async function deletePhotosAsAdmin(
 
   return res.json()
 }
+
+export async function downloadSingle(
+  photoId: string,
+  fileName: string,
+  ownerId: string,
+): Promise<void> {
+  const response = await fetch(`${API}/api/photos/${photoId}/download`, {
+    headers: { 'x-owner-id': ownerId },
+  })
+
+  if (!response.ok) {
+    if (response.status === 404) throw new Error('Foto nicht gefunden.')
+    throw new Error(`Download fehlgeschlagen: ${response.status}`)
+  }
+
+  const blob = await response.blob()
+  const url = URL.createObjectURL(blob)
+
+  const a = document.createElement('a')
+  a.href = url
+  a.download = fileName
+  document.body.appendChild(a)
+  a.click()
+
+  // Cleanup
+  setTimeout(() => {
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }, 100)
+}
+
+export async function downloadBulk(ids: string[], ownerId: string): Promise<void> {
+  const response = await fetch(`${API}/api/photos/download`, {
+    method: 'POST',
+    headers: {
+      'x-owner-id': ownerId,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ ids }),
+  })
+
+  if (!response.ok) {
+    if (response.status === 400) throw new Error('Ungültige Anfrage.')
+    if (response.status === 404) throw new Error('Keine Fotos gefunden.')
+    throw new Error(`Bulk-Download fehlgeschlagen: ${response.status}`)
+  }
+
+  const blob = await response.blob()
+  const url = URL.createObjectURL(blob)
+
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `galerie-${ids.length}-fotos.zip`
+  document.body.appendChild(a)
+  a.click()
+
+  setTimeout(() => {
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }, 100)
+}
