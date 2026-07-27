@@ -20,6 +20,18 @@ const router = createRouter({
       component: () => import('../views/GalleryView.vue'),
     },
     {
+      path: '/gaeste',
+      name: 'Gäste',
+      component: () => import('../views/GuestGallery.vue'),
+      meta: { requiresAuth: true, authType: 'password' },
+    },
+    {
+      path: '/password-check',
+      name: 'PasswordCheck',
+      component: () => import('../components/PasswordForm.vue'),
+      meta: { isAuthRoute: true },
+    },
+    {
       path: '/admin',
       name: 'admin',
       component: () => import('../views/AdminDashboard.vue'),
@@ -67,17 +79,45 @@ const getCurrentUser = async () => {
   })
 }
 
+// Navigation Guards
 router.beforeEach(async (to, from, next) => {
+  // 1. Prüfen, ob Route eine reine Auth-Route ist (PasswordCheck)
+  if (to.matched.some((record) => record.meta.isAuthRoute)) {
+    next() // Diese Route soll immer zugänglich sein
+    return
+  }
+
+  // 2. Prüfen, ob Route benutzerdefinierte Auth benötigt
+  if (
+    to.matched.some((record) => record.meta.requiresAuth && record.meta.authType === 'password')
+  ) {
+    const isPasswordAuthenticated = await checkCustomAuth()
+    if (isPasswordAuthenticated) {
+      next()
+    } else {
+      next('/password-check')
+    }
+    return
+  }
+
+  // 3. Standard Firebase Auth Check
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    const user: any = await getCurrentUser()
+    const user = await getCurrentUser()
     if (user && !user.isAnonymous) {
       next()
     } else {
       next('/login')
     }
-  } else {
-    next()
+    return
   }
+
+  // 4. Alle anderen Routen
+  next()
 })
+
+// Benutzerdefinierte Passwortprüfung
+const checkCustomAuth = async () => {
+  return !!localStorage.getItem('galerie_password')
+}
 
 export default router

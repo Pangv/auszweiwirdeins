@@ -42,6 +42,7 @@ export default defineConfig({
     }
   },
   base: '/',
+  assetsInclude: ['**/*.heic', '**/*.HEIC'],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

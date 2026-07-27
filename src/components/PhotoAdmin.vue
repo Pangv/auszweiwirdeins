@@ -5,6 +5,7 @@ import BulkActionBar from './BulkActionBar.vue'
 import { usePhotoManagement } from '../composables/usePhotoManagement'
 import type { Photo } from '@/types/gallery.ts'
 
+
 const adminPassword = ref('')
 const dummyOwnerId = ref('') // im Admin-Modus ungenutzt
 

@@ -3,13 +3,14 @@ import type { Photo } from '../types/gallery'
 export const API = import.meta.env.VITE_API_URL || 'https://galerie.auszweiwirdeins.de'
 
 export async function verifyPassword(password: string, ownerId: string): Promise<boolean> {
-  const res = await fetch(`${API}/api/upload`, {
+  const res = await fetch(`${API}/api/auth/upload-password`, {
     method: 'POST',
     headers: {
       'X-Upload-Password': password,
       'X-Owner-Id': ownerId,
+      'Content-Type': 'application/json',
     },
-    body: new FormData(),
+    body: JSON.stringify({}),
   })
   if (res.status === 401) return false
   if (!res.ok) throw new Error('Verbindungsfehler.')
