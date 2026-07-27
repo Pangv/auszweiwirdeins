@@ -1,10 +1,23 @@
 import { ref, computed } from 'vue'
 import type { Photo } from '../types/gallery'
-import { API, loadPhotos as apiLoadPhotos, uploadFiles, deletePhotos, loadStorage as apiLoadStorage } from '../services/galleryApi'
+import {
+  API,
+  loadPhotos as apiLoadPhotos,
+  uploadFiles,
+  deletePhotos,
+  deletePhotosAsAdmin,
+  loadStorage as apiLoadStorage,
+} from '../services/galleryApi'
+import heic2any from 'heic2any'
+import exifr from 'exifr'
 
 const PAGE_SIZE = 100
 
-export function usePhotoManagement(password: { value: string }, ownerId: { value: string }) {
+export function usePhotoManagement(
+  password: { value: string },
+  ownerId: { value: string },
+  adminMode = false,
+) {
   const photos = ref<Photo[]>([])
   const loading = ref(false)
   const errorMsg = ref('')
@@ -37,7 +50,7 @@ export function usePhotoManagement(password: { value: string }, ownerId: { value
 
   const filteredPhotos = computed<Photo[]>(() => {
     let result = [...photos.value]
-    if (showOnlyMine.value) {
+    if (showOnlyMine.value && !adminMode) {
       result = result.filter((p) => p.owner_id === ownerId.value)
     }
     result.sort((a, b) => {
@@ -47,23 +60,18 @@ export function usePhotoManagement(password: { value: string }, ownerId: { value
         if (dateA === null && dateB === null) return 0
         if (dateA === null) return 1
         if (dateB === null) return -1
-        return sortDir.value === 'desc'
-          ? dateB.localeCompare(dateA)
-          : dateA.localeCompare(dateB)
+        return sortDir.value === 'desc' ? dateB.localeCompare(dateA) : dateA.localeCompare(dateB)
       } else {
-        return sortDir.value === 'desc'
-          ? b.created_at - a.created_at
-          : a.created_at - b.created_at
+        return sortDir.value === 'desc' ? b.created_at - a.created_at : a.created_at - b.created_at
       }
     })
     return result
   })
 
   const canDeleteAny = computed<boolean>(() => {
+    if (adminMode) return selectedIds.value.size > 0 && !!password.value
     if (isDev) return selectedIds.value.size > 0
-    return photos.value.some(
-      (p) => selectedIds.value.has(p.id) && p.owner_id === ownerId.value,
-    )
+    return photos.value.some((p) => selectedIds.value.has(p.id) && p.owner_id === ownerId.value)
   })
 
   async function loadPhotos(): Promise<void> {
@@ -90,6 +98,7 @@ export function usePhotoManagement(password: { value: string }, ownerId: { value
   }
 
   async function handleUpload(e: Event): Promise<void> {
+    if (adminMode) return
     const input = e.target as HTMLInputElement
     const files = input.files
     if (!files || files.length === 0) return
@@ -101,10 +110,42 @@ export function usePhotoManagement(password: { value: string }, ownerId: { value
     uploadTotal.value = files.length
 
     try {
-      const fileArray = Array.from(files)
-      const count = await uploadFiles(fileArray, password.value, ownerId.value, (done) => {
-        uploadDone.value = done
-      })
+      const metaDates: Record<string, string> = {}
+      const fileArray = await Promise.all(
+        Array.from(files).map(async (file) => {
+          let takenAt: string | null = null
+          try {
+            const exif = await exifr.parse(file, ['DateTimeOriginal'])
+            if (exif?.DateTimeOriginal) {
+              takenAt = exif.DateTimeOriginal.toISOString()
+            }
+          } catch {
+            /* ignore */
+          }
+
+          if (file.name.toLowerCase().endsWith('.heic') || file.type === 'image/heic') {
+            const result = await heic2any({ blob: file, toType: 'image/webp', quality: 0.82 })
+            const blob = Array.isArray(result) ? result[0] : result
+            if (!blob) return file
+            const newFile = new File([blob], file.name.replace(/\.heic$/i, '.webp'), {
+              type: 'image/webp',
+            })
+            if (takenAt) metaDates[newFile.name] = takenAt
+            return newFile
+          }
+          if (takenAt) metaDates[file.name] = takenAt
+          return file
+        }),
+      )
+      const count = await uploadFiles(
+        fileArray,
+        metaDates,
+        password.value,
+        ownerId.value,
+        (done) => {
+          uploadDone.value = done
+        },
+      )
       uploadProgress.value = `${count} Foto(s) hochgeladen!`
       await loadPhotos()
     } catch (e: unknown) {
@@ -152,17 +193,21 @@ export function usePhotoManagement(password: { value: string }, ownerId: { value
 
   async function deleteSelected(): Promise<void> {
     const ids = Array.from(selectedIds.value)
+    if (ids.length === 0) return
     if (!confirm(`${ids.length} Foto(s) wirklich löschen?`)) return
 
     deletingIds.value = new Set(ids)
     selectedIds.value = new Set()
 
     try {
-      const result = await deletePhotos(ids, ownerId.value, password.value)
+      const result = adminMode
+        ? await deletePhotosAsAdmin(ids, password.value)
+        : await deletePhotos(ids, ownerId.value, password.value)
+
       await new Promise((r) => setTimeout(r, 300))
       photos.value = photos.value.filter((p) => !result.deleted.includes(p.id))
       deletingIds.value = new Set()
-      await loadStorage()
+      if (!adminMode) await loadStorage()
 
       if (result.failed.length > 0) {
         const reasons = result.failed.map((f) => `${f.id}: ${f.reason}`).join('\n')
@@ -170,11 +215,16 @@ export function usePhotoManagement(password: { value: string }, ownerId: { value
       }
     } catch (e: unknown) {
       deletingIds.value = new Set()
-      errorMsg.value = (e as Error).message
+      if (adminMode && e instanceof Error && e.message === 'UNAUTHORIZED') {
+        errorMsg.value = 'Admin-Passwort falsch.'
+      } else {
+        errorMsg.value = (e as Error).message
+      }
     }
   }
 
   function photoBelongsToUser(photo: Photo): boolean {
+    if (adminMode) return true
     return photo.owner_id === ownerId.value
   }
 

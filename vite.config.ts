@@ -18,6 +18,14 @@ export default defineConfig({
       ext: '.br',
     }),
   ],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://galerie.auszweiwirdeins.de',
+        changeOrigin: true,
+      },
+    },
+  },
   build: {
     reportCompressedSize: true,
     chunkSizeWarningLimit: 500,

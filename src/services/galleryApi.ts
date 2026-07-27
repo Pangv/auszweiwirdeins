@@ -1,6 +1,6 @@
 import type { Photo } from '../types/gallery'
 
-export const API = 'https://galerie.auszweiwirdeins.de'
+export const API = import.meta.env.VITE_API_URL || 'https://galerie.auszweiwirdeins.de'
 
 export async function verifyPassword(password: string, ownerId: string): Promise<boolean> {
   const res = await fetch(`${API}/api/upload`, {
@@ -16,7 +16,10 @@ export async function verifyPassword(password: string, ownerId: string): Promise
   return true
 }
 
-export async function loadPhotos(limit = 100, offset = 0): Promise<{ photos: Photo[]; total: number }> {
+export async function loadPhotos(
+  limit = 100,
+  offset = 0,
+): Promise<{ photos: Photo[]; total: number }> {
   const res = await fetch(`${API}/api/photos?limit=${limit}&offset=${offset}`)
   if (!res.ok) throw new Error('Laden fehlgeschlagen')
   return res.json() as Promise<{ photos: Photo[]; total: number }>
@@ -24,6 +27,7 @@ export async function loadPhotos(limit = 100, offset = 0): Promise<{ photos: Pho
 
 export async function uploadFiles(
   files: File[],
+  metaDates: Record<string, string>,
   password: string,
   ownerId: string,
   onProgress?: (done: number, total: number) => void,
@@ -35,6 +39,12 @@ export async function uploadFiles(
     const batch = files.slice(i, i + BATCH_SIZE)
     const formData = new FormData()
     batch.forEach((file) => formData.append('photos', file))
+    const batchMeta = Object.fromEntries(
+      batch.map((f) => [f.name, metaDates[f.name]]).filter(([, v]) => v),
+    )
+    if (Object.keys(batchMeta).length > 0) {
+      formData.append('metaDates', JSON.stringify(batchMeta))
+    }
 
     const res = await fetch(`${API}/api/upload`, {
       method: 'POST',
@@ -58,7 +68,11 @@ export async function uploadFiles(
   return uploadedCount
 }
 
-export async function deletePhotos(ids: string[], ownerId: string, password: string): Promise<{
+export async function deletePhotos(
+  ids: string[],
+  ownerId: string,
+  password: string,
+): Promise<{
   deleted: string[]
   failed: { id: string; reason: string }[]
 }> {
@@ -87,4 +101,40 @@ export async function loadStorage(password: string): Promise<{ used: number; tot
   } catch {
     return { used: 0, total: 0 }
   }
+}
+
+// Neue Funktion an bestehende anlehnen:
+export async function deletePhotosAsAdmin(
+  ids: string[],
+  adminPassword: string, // ← bleibt Pflicht, dein Server will das
+): Promise<{
+  success: boolean
+  deleted: string[]
+  failed: Array<{ id: string; reason: 'not_found' }>
+  deletedCount: number
+  failedCount: number
+}> {
+  if (!adminPassword) {
+    throw new Error('UNAUTHORIZED')
+  }
+
+  const res = await fetch('/api/admin/photos', {
+    method: 'DELETE',
+    headers: {
+      'X-Admin-Password': adminPassword,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ ids }),
+  })
+
+  if (res.status === 401) {
+    throw new Error('UNAUTHORIZED')
+  }
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Unknown error' }))
+    throw new Error(err.error || `HTTP ${res.status}`)
+  }
+
+  return res.json()
 }

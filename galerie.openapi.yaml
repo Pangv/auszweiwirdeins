@@ -1,8 +1,16 @@
 openapi: 3.1.0
 info:
   title: Galerie API
-  version: 1.0.0
-  description: Photo gallery backend with pagination, upload, and management.
+  version: 1.1.0
+  description: |
+    Photo gallery backend with pagination, upload, and management.
+
+    ## HEIC note
+    HEIC/HEIF files are converted server-side (or client-side before upload).
+    Conversion strips EXIF metadata. To preserve capture dates, the client
+    should run `exifr` on the ORIGINAL file and send the result in the
+    `metaDates` field. The server uses it as fallback when its own EXIF
+    extraction finds no DateTimeOriginal.
 servers:
   - url: https://auszweiwirdeins.de
     description: Production
@@ -100,6 +108,7 @@ paths:
                     type: array
                     items:
                       type: string
+                      format: uuid
                   failed:
                     type: array
                     items:
@@ -114,6 +123,18 @@ paths:
                     type: integer
                   failedCount:
                     type: integer
+        '400':
+          description: Missing Owner-ID, empty ids array, or more than 200 IDs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Database transaction failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /api/photos/{id}:
     delete:
@@ -140,15 +161,35 @@ paths:
                 properties:
                   success:
                     type: boolean
+        '400':
+          description: Missing Owner-ID header
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '403':
           description: Forbidden – not the owner
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
           description: Photo not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /api/upload:
     post:
       summary: Upload photos
-      description: Upload up to 20 image files. Requires password and owner-ID headers.
+      description: |
+        Upload up to 20 image files (max 20 MB each). Requires password and owner-ID headers.
+
+        Accepted formats: any `image/*` mimetype (JPEG, PNG, WebP, GIF, AVIF, ...)
+        plus HEIC/HEIF via extension check.
+
+        **Rate limit:** 60 uploads per IP per 15 minutes.
       parameters:
         - name: X-Upload-Password
           in: header
@@ -167,12 +208,30 @@ paths:
             schema:
               type: object
               properties:
+                metaDates:
+                  type: string
+                  description: |
+                    JSON object mapping **original filename → ISO 8601 date string**
+                    (DateTimeOriginal extracted client-side with exifr, BEFORE
+                    any client-side conversion).
+
+                    ⚠️ **MUST be appended to FormData BEFORE the photo files** –
+                    multer parses fields sequentially, so files processed before
+                    this field arrives won't see it.
+
+                    ⚠️ Keys must match the final `filename` of each uploaded file.
+                    If the client converts HEIC → JPEG before upload, use the
+                    converted filename as key.
+
+                    Example: `{"IMG_1234.jpeg":"2024-01-15T14:30:00.000Z"}`
+                  example: '{"IMG_1234.jpeg":"2024-01-15T14:30:00.000Z"}'
                 photos:
                   type: array
                   items:
                     type: string
                     format: binary
-                  description: Image files (JPEG, PNG, WebP, etc.)
+                  maxItems: 20
+                  description: Image files (JPEG, PNG, WebP, GIF, AVIF, HEIC/HEIF, max 20 MB each)
       responses:
         '200':
           description: Upload result
@@ -192,14 +251,68 @@ paths:
                       properties:
                         id:
                           type: string
+                          format: uuid
                         filename:
                           type: string
                         thumb:
                           type: string
+        '400':
+          description: Missing Owner-ID or no files uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '401':
           description: Wrong password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '413':
           description: File too large (max 20 MB)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded (60 uploads / 15 min per IP)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-code-samples:
+        - lang: JavaScript
+          source: |
+            import exifr from 'exifr';
+
+            async function uploadPhotos(files, password, ownerId) {
+              const metaDates = {};
+
+              // 1. Extract EXIF from ORIGINAL files (before any conversion!)
+              for (const f of files) {
+                try {
+                  const exif = await exifr.parse(f, { pick: ['DateTimeOriginal'] });
+                  if (exif?.DateTimeOriginal) {
+                    // Key = the filename that will be uploaded!
+                    metaDates[f.name] = exif.DateTimeOriginal.toISOString();
+                  }
+                } catch { /* no EXIF – server fallback will try */ }
+              }
+
+              // 2. Build FormData – metaDates FIRST, files AFTER
+              const fd = new FormData();
+              fd.append('metaDates', JSON.stringify(metaDates));
+              for (const f of files) fd.append('photos', f);
+
+              return fetch('/api/upload', {
+                method: 'POST',
+                headers: {
+                  'X-Upload-Password': password,
+                  'X-Owner-Id': ownerId,
+                },
+                body: fd,
+              }).then(r => r.json());
+            }
 
   /api/stats:
     get:
@@ -218,6 +331,7 @@ paths:
                     type: integer
                   maxSizeBytes:
                     type: integer
+                    description: Hard gallery limit (50 GB)
                   usedPercent:
                     type: number
                   totalSizeGb:
@@ -246,6 +360,114 @@ paths:
                     type: number
                   freePercent:
                     type: number
+        '500':
+          description: Could not read filesystem stats
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/admin/photos:
+    delete:
+      summary: Delete photos by IDs (admin only)
+      description: |
+        Deletes photos regardless of ownership. Unlike the user-facing bulk
+        delete, there is no owner check – the admin can remove anyone's photos.
+        Secured with a dedicated admin password (separate from the upload
+        password). If `ADMIN_PASSWORD` is not configured server-side, this
+        endpoint always returns 401 (fail-closed).
+
+        Accepts up to 500 IDs per request. Unknown IDs are reported as
+        `not_found` in the `failed` array; `forbidden` never occurs here.
+      parameters:
+        - name: X-Admin-Password
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Dedicated admin password (not the upload password)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ids]
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                  minItems: 1
+                  maxItems: 500
+      responses:
+        '200':
+          description: Deletion result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  deleted:
+                    type: array
+                    items:
+                      type: string
+                  failed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        reason:
+                          type: string
+                          enum: [not_found]
+                          description: Admin delete never returns "forbidden"
+                  deletedCount:
+                    type: integer
+                  failedCount:
+                    type: integer
+              example:
+                success: true
+                deleted: ['a1b2c3d4-...', 'e5f6a7b8-...']
+                failed: [{ 'id': '00000000-...', 'reason': 'not_found' }]
+                deletedCount: 2
+                failedCount: 1
+        '400':
+          description: Missing/empty ids or more than 500 IDs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Wrong or missing admin password (also when ADMIN_PASSWORD is not configured)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Delete transaction failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-code-samples:
+        - lang: JavaScript
+          source: |
+            async function adminDeletePhotos(ids, adminPassword) {
+              const res = await fetch('/api/admin/photos', {
+                method: 'DELETE',
+                headers: {
+                  'X-Admin-Password': adminPassword,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ids }),
+              });
+              return res.json();
+            }
 
 components:
   schemas:
@@ -258,17 +480,31 @@ components:
           format: uuid
         filename:
           type: string
+          description: Server-generated webp filename ({uuid}.webp)
         thumb:
           type: string
+          description: Server-generated thumbnail filename ({uuid}_thumb.webp)
         owner_id:
           type: string
         size:
           type: integer
-          description: File size in bytes (original + thumbnail)
+          description: Combined size of webp image + thumbnail in bytes (original file is discarded)
         created_at:
           type: string
           format: date-time
+          description: Upload timestamp (server-side)
         taken_at:
           type: string
           format: date-time
           nullable: true
+          description: |
+            Capture date from EXIF. Resolution order:
+            1. Server-side EXIF extraction
+            2. Client-provided `metaDates` fallback
+            3. null if neither available
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string

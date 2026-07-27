@@ -20,7 +20,7 @@ export function useStats(pollIntervalMs = 30000) {
     loading.value = true
     error.value = null
     try {
-      const res = await fetch(`galerie.${API_URL}/api/stats`)
+      const res = await fetch(`${API_URL}/api/stats`)
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const text = await res.text()
       if (!text) throw new Error('Empty response')
