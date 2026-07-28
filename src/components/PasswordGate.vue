@@ -76,7 +76,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
 import { useGalleryAuth } from '@/composables/useGalleryAuth'
 
 const props = withDefaults(defineProps<{
@@ -93,8 +92,6 @@ const emit = defineEmits<{
   verified: []
 }>()
 
-const router = useRouter()
-const route = useRoute()
 const auth = useGalleryAuth()
 
 const password = ref('')
@@ -121,9 +118,7 @@ async function submitPassword() {
   errorMessage.value = ''
   const ok = await auth.verifyPassword(password.value)
   if (ok) {
-    const target = props.redirectTo || route.query.redirect as string || '/galerie'
     emit('verified')
-    router.push(target)
   } else {
     errorMessage.value = auth.passwordError.value || 'Falsches Passwort.'
     password.value = ''

@@ -19,7 +19,7 @@
         </div>
       </div>
 
-      <PasswordGate v-if="!isPasswordVerified" @verified="onPasswordVerified" />
+      <PasswordGate v-if="!isPasswordVerified" />
 
 
       <div v-if="isPasswordVerified" class="drop-zone hidden md:block" @dragover.prevent="onDragOver"
@@ -155,7 +155,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import Footer from '@/components/Footer.vue'
 import PasswordGate from '@/components/PasswordGate.vue'
 import StorageBar from '@/components/StorageBar.vue'
@@ -198,7 +199,15 @@ const { dragOver, onDragOver, onDragLeave, onDrop } = useDragDrop((files) => {
   })
 })
 
-async function onPasswordVerified() {
+const router = useRouter()
+const route = useRoute()
+
+watch(isPasswordVerified, async (verified) => {
+  if (!verified) return
+  await initAuth()
+  if (!ownerId.value) {
+    await recoverOwnerId()
+  }
   await loadPhotos()
   await loadStorage()
   if (!galleryCode.value) {
@@ -208,7 +217,11 @@ async function onPasswordVerified() {
       console.error('Code-Erstellung fehlgeschlagen:', e)
     }
   }
-}
+  const target = route.query.redirect as string
+  if (target) {
+    router.push(target)
+  }
+})
 
 function copyCode() {
   if (galleryCode.value) {

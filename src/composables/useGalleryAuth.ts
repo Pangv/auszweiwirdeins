@@ -14,19 +14,19 @@ if (!storedOwnerId) {
   localStorage.setItem(OWNER_ID_KEY, storedOwnerId)
 }
 
+const ownerId = ref<string>(storedOwnerId!)
+const galleryCode = ref<string>(localStorage.getItem(GALLERY_CODE_KEY) || '')
+const password = ref<string>(localStorage.getItem(PASSWORD_KEY) || '')
+const isPasswordVerified = ref<boolean>(!!localStorage.getItem(PASSWORD_KEY))
+
+const passwordVerifying = ref(false)
+const passwordError = ref('')
+
+const codeCreated = ref('')
+const codeInput = ref('')
+const codeRecovering = ref(false)
+
 export function useGalleryAuth() {
-  const ownerId = ref<string>(storedOwnerId!)
-  const galleryCode = ref<string>(localStorage.getItem(GALLERY_CODE_KEY) || '')
-  const password = ref<string>(localStorage.getItem(PASSWORD_KEY) || '')
-  const isPasswordVerified = ref<boolean>(!!localStorage.getItem(PASSWORD_KEY))
-
-  const passwordVerifying = ref(false)
-  const passwordError = ref('')
-
-  const codeCreated = ref('')
-  const codeInput = ref('')
-  const codeRecovering = ref(false)
-
   async function initAuth(): Promise<void> {
     if (auth.currentUser) return
     try {
