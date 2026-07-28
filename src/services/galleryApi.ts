@@ -119,7 +119,7 @@ export async function deletePhotosAsAdmin(
     throw new Error('UNAUTHORIZED')
   }
 
-  const res = await fetch('/api/admin/photos', {
+  const res = await fetch(`${API}/api/admin/photos`, {
     method: 'DELETE',
     headers: {
       'X-Admin-Password': adminPassword,
