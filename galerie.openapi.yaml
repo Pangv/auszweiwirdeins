@@ -1,510 +1,463 @@
-openapi: 3.1.0
-info:
-  title: Galerie API
-  version: 1.1.0
-  description: |
-    Photo gallery backend with pagination, upload, and management.
-
-    ## HEIC note
-    HEIC/HEIF files are converted server-side (or client-side before upload).
-    Conversion strips EXIF metadata. To preserve capture dates, the client
-    should run `exifr` on the ORIGINAL file and send the result in the
-    `metaDates` field. The server uses it as fallback when its own EXIF
-    extraction finds no DateTimeOriginal.
-servers:
-  - url: https://auszweiwirdeins.de
-    description: Production
-  - url: http://localhost:3000
-    description: Local development
-
-paths:
-  /api/photos:
-    get:
-      summary: List photos (paginated)
-      description: Returns photos ordered by creation date descending.
-      parameters:
-        - name: limit
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 50
-          description: Number of photos to return (max 100)
-        - name: offset
-          in: query
-          schema:
-            type: integer
-            minimum: 0
-            default: 0
-          description: Number of photos to skip
-      responses:
-        '200':
-          description: Paginated photo list
-          content:
-            application/json:
-              schema:
-                type: object
-                required: [total, limit, offset, photos]
-                properties:
-                  total:
-                    type: integer
-                    description: Total number of photos in the gallery
-                  limit:
-                    type: integer
-                  offset:
-                    type: integer
-                  photos:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Photo'
-      x-code-samples:
-        - lang: JavaScript
-          source: |
-            // Load next page (infinite scroll / load-more)
-            const pageSize = 50;
-            async function loadPhotos(offset) {
-              const res = await fetch(`/api/photos?limit=${pageSize}&offset=${offset}`);
-              return res.json();
-            }
-            // Usage:
-            const firstPage = await loadPhotos(0);
-            const nextPage  = await loadPhotos(firstPage.photos.length);
-
-    delete:
-      summary: Bulk delete photos
-      description: Deletes multiple photos owned by the requester. Accepts up to 200 IDs.
-      parameters:
-        - name: X-Owner-Id
-          in: header
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [ids]
-              properties:
-                ids:
-                  type: array
-                  items:
-                    type: string
-                    format: uuid
-                  maxItems: 200
-      responses:
-        '200':
-          description: Deletion result
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  deleted:
-                    type: array
-                    items:
-                      type: string
-                      format: uuid
-                  failed:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                        reason:
-                          type: string
-                          enum: [not_found, forbidden]
-                  deletedCount:
-                    type: integer
-                  failedCount:
-                    type: integer
-        '400':
-          description: Missing Owner-ID, empty ids array, or more than 200 IDs
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Database transaction failed
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /api/photos/{id}:
-    delete:
-      summary: Delete a single photo
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - name: X-Owner-Id
-          in: header
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Photo deleted
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-        '400':
-          description: Missing Owner-ID header
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Forbidden – not the owner
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Photo not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /api/upload:
-    post:
-      summary: Upload photos
-      description: |
-        Upload up to 20 image files (max 20 MB each). Requires password and owner-ID headers.
-
-        Accepted formats: any `image/*` mimetype (JPEG, PNG, WebP, GIF, AVIF, ...)
-        plus HEIC/HEIF via extension check.
-
-        **Rate limit:** 60 uploads per IP per 15 minutes.
-      parameters:
-        - name: X-Upload-Password
-          in: header
-          required: true
-          schema:
-            type: string
-        - name: X-Owner-Id
-          in: header
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                metaDates:
-                  type: string
-                  description: |
-                    JSON object mapping **original filename → ISO 8601 date string**
-                    (DateTimeOriginal extracted client-side with exifr, BEFORE
-                    any client-side conversion).
-
-                    ⚠️ **MUST be appended to FormData BEFORE the photo files** –
-                    multer parses fields sequentially, so files processed before
-                    this field arrives won't see it.
-
-                    ⚠️ Keys must match the final `filename` of each uploaded file.
-                    If the client converts HEIC → JPEG before upload, use the
-                    converted filename as key.
-
-                    Example: `{"IMG_1234.jpeg":"2024-01-15T14:30:00.000Z"}`
-                  example: '{"IMG_1234.jpeg":"2024-01-15T14:30:00.000Z"}'
-                photos:
-                  type: array
-                  items:
-                    type: string
-                    format: binary
-                  maxItems: 20
-                  description: Image files (JPEG, PNG, WebP, GIF, AVIF, HEIC/HEIF, max 20 MB each)
-      responses:
-        '200':
-          description: Upload result
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  uploaded:
-                    type: integer
-                  photos:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          format: uuid
-                        filename:
-                          type: string
-                        thumb:
-                          type: string
-        '400':
-          description: Missing Owner-ID or no files uploaded
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Wrong password
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '413':
-          description: File too large (max 20 MB)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '429':
-          description: Rate limit exceeded (60 uploads / 15 min per IP)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      x-code-samples:
-        - lang: JavaScript
-          source: |
-            import exifr from 'exifr';
-
-            async function uploadPhotos(files, password, ownerId) {
-              const metaDates = {};
-
-              // 1. Extract EXIF from ORIGINAL files (before any conversion!)
-              for (const f of files) {
-                try {
-                  const exif = await exifr.parse(f, { pick: ['DateTimeOriginal'] });
-                  if (exif?.DateTimeOriginal) {
-                    // Key = the filename that will be uploaded!
-                    metaDates[f.name] = exif.DateTimeOriginal.toISOString();
-                  }
-                } catch { /* no EXIF – server fallback will try */ }
-              }
-
-              // 2. Build FormData – metaDates FIRST, files AFTER
-              const fd = new FormData();
-              fd.append('metaDates', JSON.stringify(metaDates));
-              for (const f of files) fd.append('photos', f);
-
-              return fetch('/api/upload', {
-                method: 'POST',
-                headers: {
-                  'X-Upload-Password': password,
-                  'X-Owner-Id': ownerId,
+{
+  'openapi': '3.0.3',
+  'info':
+    {
+      'title': 'Galerie API',
+      'version': '1.0.0',
+      'description': 'Backend-API für die Galerie-Anwendung',
+    },
+  'servers':
+    [
+      { 'url': 'http://localhost:3000', 'description': 'Local development' },
+      { 'url': 'https://auszweiwirdeins.de', 'description': 'Production' },
+    ],
+  'paths':
+    {
+      '/api/upload':
+        {
+          'post':
+            {
+              'summary': 'Bilder hochladen (max. 20 Dateien, 20 MB pro Datei)',
+              'security': [{ 'UploadPassword': [] }, { 'OwnerId': [] }],
+              'requestBody':
+                {
+                  'required': true,
+                  'content':
+                    {
+                      'multipart/form-data':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'required': ['photos'],
+                              'properties':
+                                {
+                                  'photos':
+                                    {
+                                      'type': 'array',
+                                      'items': { 'type': 'string', 'format': 'binary' },
+                                      'description': 'Bilddateien (JPEG, PNG, WebP, HEIC, HEIF)',
+                                    },
+                                  'metaDates':
+                                    {
+                                      'type': 'string',
+                                      'description': 'JSON-String mit clientseitig ausgelesenen EXIF-Daten, keyed by original filename',
+                                    },
+                                },
+                            },
+                        },
+                    },
                 },
-                body: fd,
-              }).then(r => r.json());
-            }
-
-  /api/stats:
-    get:
-      summary: Gallery statistics
-      responses:
-        '200':
-          description: Gallery stats
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  totalPhotos:
-                    type: integer
-                  totalSizeBytes:
-                    type: integer
-                  maxSizeBytes:
-                    type: integer
-                    description: Hard gallery limit (50 GB)
-                  usedPercent:
-                    type: number
-                  totalSizeGb:
-                    type: number
-                  maxSizeGb:
-                    type: number
-
-  /api/storage:
-    get:
-      summary: Server disk usage
-      responses:
-        '200':
-          description: Disk usage info
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  totalGb:
-                    type: number
-                  usedGb:
-                    type: number
-                  freeGb:
-                    type: number
-                  usedPercent:
-                    type: number
-                  freePercent:
-                    type: number
-        '500':
-          description: Could not read filesystem stats
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /api/admin/photos:
-    delete:
-      summary: Delete photos by IDs (admin only)
-      description: |
-        Deletes photos regardless of ownership. Unlike the user-facing bulk
-        delete, there is no owner check – the admin can remove anyone's photos.
-        Secured with a dedicated admin password (separate from the upload
-        password). If `ADMIN_PASSWORD` is not configured server-side, this
-        endpoint always returns 401 (fail-closed).
-
-        Accepts up to 500 IDs per request. Unknown IDs are reported as
-        `not_found` in the `failed` array; `forbidden` never occurs here.
-      parameters:
-        - name: X-Admin-Password
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Dedicated admin password (not the upload password)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [ids]
-              properties:
-                ids:
-                  type: array
-                  items:
-                    type: string
-                    format: uuid
-                  minItems: 1
-                  maxItems: 500
-      responses:
-        '200':
-          description: Deletion result
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  deleted:
-                    type: array
-                    items:
-                      type: string
-                  failed:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                        reason:
-                          type: string
-                          enum: [not_found]
-                          description: Admin delete never returns "forbidden"
-                  deletedCount:
-                    type: integer
-                  failedCount:
-                    type: integer
-              example:
-                success: true
-                deleted: ['a1b2c3d4-...', 'e5f6a7b8-...']
-                failed: [{ 'id': '00000000-...', 'reason': 'not_found' }]
-                deletedCount: 2
-                failedCount: 1
-        '400':
-          description: Missing/empty ids or more than 500 IDs
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Wrong or missing admin password (also when ADMIN_PASSWORD is not configured)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Delete transaction failed
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      x-code-samples:
-        - lang: JavaScript
-          source: |
-            async function adminDeletePhotos(ids, adminPassword) {
-              const res = await fetch('/api/admin/photos', {
-                method: 'DELETE',
-                headers: {
-                  'X-Admin-Password': adminPassword,
-                  'Content-Type': 'application/json',
+              'responses':
+                {
+                  '200':
+                    {
+                      'description': 'Upload erfolgreich',
+                      'content':
+                        {
+                          'application/json':
+                            { 'schema': { '$ref': '#/components/schemas/UploadResponse' } },
+                        },
+                    },
+                  '400': { 'description': 'Owner-ID fehlt / Keine Dateien hochgeladen' },
+                  '401': { 'description': 'Falsches Upload-Passwort' },
+                  '413': { 'description': 'Datei zu groß (max. 20 MB)' },
+                  '429': { 'description': 'Zu viele Uploads (Rate Limit)' },
                 },
-                body: JSON.stringify({ ids }),
-              });
-              return res.json();
-            }
-
-components:
-  schemas:
-    Photo:
-      type: object
-      required: [id, filename, thumb, owner_id, size, created_at]
-      properties:
-        id:
-          type: string
-          format: uuid
-        filename:
-          type: string
-          description: Server-generated webp filename ({uuid}.webp)
-        thumb:
-          type: string
-          description: Server-generated thumbnail filename ({uuid}_thumb.webp)
-        owner_id:
-          type: string
-        size:
-          type: integer
-          description: Combined size of webp image + thumbnail in bytes (original file is discarded)
-        created_at:
-          type: string
-          format: date-time
-          description: Upload timestamp (server-side)
-        taken_at:
-          type: string
-          format: date-time
-          nullable: true
-          description: |
-            Capture date from EXIF. Resolution order:
-            1. Server-side EXIF extraction
-            2. Client-provided `metaDates` fallback
-            3. null if neither available
-    Error:
-      type: object
-      required: [error]
-      properties:
-        error:
-          type: string
+            },
+        },
+      '/api/photos':
+        {
+          'get':
+            {
+              'summary': 'Fotos paginiert abrufen',
+              'parameters':
+                [
+                  {
+                    'name': 'limit',
+                    'in': 'query',
+                    'schema': { 'type': 'integer', 'default': 50, 'maximum': 100 },
+                    'description': 'Anzahl der Fotos pro Seite',
+                  },
+                  {
+                    'name': 'offset',
+                    'in': 'query',
+                    'schema': { 'type': 'integer', 'default': 0 },
+                    'description': 'Offset für Paginierung',
+                  },
+                ],
+              'responses':
+                {
+                  '200':
+                    {
+                      'description': 'Liste der Fotos',
+                      'content':
+                        {
+                          'application/json':
+                            { 'schema': { '$ref': '#/components/schemas/PhotosListResponse' } },
+                        },
+                    },
+                },
+            },
+          'delete':
+            {
+              'summary': 'Eigene Fotos bulk-löschen (max. 200 IDs)',
+              'security': [{ 'OwnerId': [] }],
+              'requestBody':
+                {
+                  'required': true,
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'required': ['ids'],
+                              'properties':
+                                {
+                                  'ids':
+                                    {
+                                      'type': 'array',
+                                      'items': { 'type': 'string', 'format': 'uuid' },
+                                      'maxItems': 200,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                {
+                  '200':
+                    {
+                      'description': 'Löschvorgang abgeschlossen',
+                      'content':
+                        {
+                          'application/json':
+                            { 'schema': { '$ref': '#/components/schemas/BulkDeleteResponse' } },
+                        },
+                    },
+                  '400': { 'description': 'Owner-ID fehlt / Keine IDs übergeben / Zu viele IDs' },
+                },
+            },
+        },
+      '/api/photos/download':
+        {
+          'post':
+            {
+              'summary': 'Fotos als ZIP bulk-downloaden (max. 500 IDs)',
+              'requestBody':
+                {
+                  'required': true,
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'required': ['ids'],
+                              'properties':
+                                {
+                                  'ids':
+                                    {
+                                      'type': 'array',
+                                      'items': { 'type': 'string', 'format': 'uuid' },
+                                      'maxItems': 500,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                {
+                  '200':
+                    {
+                      'description': 'ZIP-Datei mit den angeforderten Fotos',
+                      'content':
+                        {
+                          'application/zip': { 'schema': { 'type': 'string', 'format': 'binary' } },
+                        },
+                    },
+                  '400': { 'description': 'Keine IDs / Zu viele IDs' },
+                  '404': { 'description': 'Keine Fotos gefunden' },
+                },
+            },
+        },
+      '/api/photos/{id}/download':
+        {
+          'get':
+            {
+              'summary': 'Einzelfoto als WebP-Download',
+              'parameters':
+                [
+                  {
+                    'name': 'id',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string', 'format': 'uuid' },
+                  },
+                ],
+              'responses':
+                {
+                  '200':
+                    {
+                      'description': 'Bilddatei (WebP)',
+                      'content':
+                        { 'image/webp': { 'schema': { 'type': 'string', 'format': 'binary' } } },
+                    },
+                  '404': { 'description': 'Foto nicht gefunden / Datei fehlt' },
+                },
+            },
+        },
+      '/api/stats':
+        {
+          'get':
+            {
+              'summary': 'Galerie-Statistiken abrufen',
+              'responses':
+                {
+                  '200':
+                    {
+                      'description': 'Statistiken',
+                      'content':
+                        {
+                          'application/json':
+                            { 'schema': { '$ref': '#/components/schemas/StatsResponse' } },
+                        },
+                    },
+                },
+            },
+        },
+      '/api/storage':
+        {
+          'get':
+            {
+              'summary': 'Server-Speicherkapazität abrufen',
+              'responses':
+                {
+                  '200':
+                    {
+                      'description': 'Speicherinformationen',
+                      'content':
+                        {
+                          'application/json':
+                            { 'schema': { '$ref': '#/components/schemas/StorageResponse' } },
+                        },
+                    },
+                },
+            },
+        },
+      '/api/auth/upload-password':
+        {
+          'post':
+            {
+              'summary': 'Upload-Passwort prüfen',
+              'security': [{ 'UploadPassword': [] }],
+              'responses':
+                {
+                  '200':
+                    {
+                      'description': 'Passwort gültig',
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    { 'success': { 'type': 'boolean', 'enum': [true] } },
+                                },
+                            },
+                        },
+                    },
+                  '401': { 'description': 'Falsches Passwort' },
+                },
+            },
+        },
+      '/api/admin/photos':
+        {
+          'delete':
+            {
+              'summary': 'Admin: Beliebige Fotos löschen (max. 500 IDs)',
+              'security': [{ 'AdminPassword': [] }],
+              'requestBody':
+                {
+                  'required': true,
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'required': ['ids'],
+                              'properties':
+                                {
+                                  'ids':
+                                    {
+                                      'type': 'array',
+                                      'items': { 'type': 'string', 'format': 'uuid' },
+                                      'maxItems': 500,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                {
+                  '200':
+                    {
+                      'description': 'Löschvorgang abgeschlossen',
+                      'content':
+                        {
+                          'application/json':
+                            { 'schema': { '$ref': '#/components/schemas/BulkDeleteResponse' } },
+                        },
+                    },
+                  '400': { 'description': 'Keine IDs / Zu viele IDs' },
+                  '401': { 'description': 'Falsches Admin-Passwort' },
+                },
+            },
+        },
+    },
+  'components':
+    {
+      'securitySchemes':
+        {
+          'UploadPassword':
+            {
+              'type': 'apiKey',
+              'in': 'header',
+              'name': 'X-Upload-Password',
+              'description': 'Passwort zum Hochladen von Bildern',
+            },
+          'AdminPassword':
+            {
+              'type': 'apiKey',
+              'in': 'header',
+              'name': 'x-admin-password',
+              'description': 'Admin-Passwort zum Löschen beliebiger Bilder',
+            },
+          'OwnerId':
+            {
+              'type': 'apiKey',
+              'in': 'header',
+              'name': 'X-Owner-Id',
+              'description': 'Eindeutige Owner-ID zur Identifikation des Besitzers',
+            },
+        },
+      'schemas':
+        {
+          'Photo':
+            {
+              'type': 'object',
+              'properties':
+                {
+                  'id': { 'type': 'string', 'format': 'uuid' },
+                  'filename': { 'type': 'string', 'example': 'uuid.webp' },
+                  'thumb': { 'type': 'string', 'example': 'uuid_thumb.webp' },
+                  'owner_id': { 'type': 'string' },
+                  'size':
+                    {
+                      'type': 'integer',
+                      'description': 'Gesamtgröße in Bytes (Original + Thumbnail)',
+                    },
+                  'created_at': { 'type': 'string', 'format': 'date-time' },
+                  'taken_at': { 'type': 'string', 'format': 'date-time', 'nullable': true },
+                },
+            },
+          'UploadResponse':
+            {
+              'type': 'object',
+              'properties':
+                {
+                  'success': { 'type': 'boolean' },
+                  'uploaded':
+                    {
+                      'type': 'integer',
+                      'description': 'Anzahl der erfolgreich hochgeladenen Dateien',
+                    },
+                  'photos':
+                    {
+                      'type': 'array',
+                      'items':
+                        {
+                          'type': 'object',
+                          'properties':
+                            {
+                              'id': { 'type': 'string', 'format': 'uuid' },
+                              'filename': { 'type': 'string' },
+                              'thumb': { 'type': 'string' },
+                            },
+                        },
+                    },
+                },
+            },
+          'PhotosListResponse':
+            {
+              'type': 'object',
+              'properties':
+                {
+                  'total': { 'type': 'integer', 'description': 'Gesamtanzahl der Fotos' },
+                  'limit': { 'type': 'integer' },
+                  'offset': { 'type': 'integer' },
+                  'photos': { 'type': 'array', 'items': { '$ref': '#/components/schemas/Photo' } },
+                },
+            },
+          'StatsResponse':
+            {
+              'type': 'object',
+              'properties':
+                {
+                  'totalPhotos': { 'type': 'integer' },
+                  'totalSizeBytes': { 'type': 'integer' },
+                  'maxSizeBytes': { 'type': 'integer' },
+                  'usedPercent': { 'type': 'number', 'format': 'float' },
+                  'totalSizeGb': { 'type': 'number', 'format': 'float' },
+                  'maxSizeGb': { 'type': 'integer' },
+                },
+            },
+          'StorageResponse':
+            {
+              'type': 'object',
+              'properties':
+                {
+                  'totalGb': { 'type': 'number', 'format': 'float' },
+                  'usedGb': { 'type': 'number', 'format': 'float' },
+                  'freeGb': { 'type': 'number', 'format': 'float' },
+                  'usedPercent': { 'type': 'number', 'format': 'float' },
+                  'freePercent': { 'type': 'number', 'format': 'float' },
+                },
+            },
+          'BulkDeleteResponse':
+            {
+              'type': 'object',
+              'properties':
+                {
+                  'success': { 'type': 'boolean' },
+                  'deleted': { 'type': 'array', 'items': { 'type': 'string', 'format': 'uuid' } },
+                  'failed':
+                    {
+                      'type': 'array',
+                      'items':
+                        {
+                          'type': 'object',
+                          'properties':
+                            {
+                              'id': { 'type': 'string', 'format': 'uuid' },
+                              'reason': { 'type': 'string', 'enum': ['not_found', 'forbidden'] },
+                            },
+                        },
+                    },
+                  'deletedCount': { 'type': 'integer' },
+                  'failedCount': { 'type': 'integer' },
+                },
+            },
+        },
+    },
+}
