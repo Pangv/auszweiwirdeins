@@ -13,7 +13,7 @@ const cspPolicy = [
   "font-src 'self' https://fonts.bunny.net",
   "form-action 'self'",
   "frame-src https://kommrum-895d1.firebaseapp.com",
-  "img-src 'self' https://images.unsplash.com https://placeholdit.com https://galerie.auszweiwirdeins.de https://*.tile.openstreetmap.org data:",
+  "img-src 'self' https://images.unsplash.com https://placeholdit.com https://galerie.auszweiwirdeins.de https://*.tile.openstreetmap.org data: blob:",
   "manifest-src 'self'",
   "script-src 'self' https://apis.google.com 'unsafe-eval'",
   "style-src 'self' https://fonts.bunny.net 'unsafe-inline'",
