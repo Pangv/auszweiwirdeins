@@ -49,10 +49,10 @@ const emit = defineEmits<{
   click: []
 }>()
 
-const liveSrc = ref<string | null>(null)
+const liveSrc = ref<string | undefined>(undefined)
 
 watch(() => props.src, async (val) => {
-  if (!val) { liveSrc.value = null; return }
+  if (!val) { liveSrc.value = undefined; return }
   if (isHeicFile(val)) {
     try {
       liveSrc.value = await convertHeicToBlobUrl(val)

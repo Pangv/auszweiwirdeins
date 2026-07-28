@@ -13,7 +13,7 @@ export async function convertHeicToBlobUrl(url: string): Promise<string> {
   const response = await fetch(url);
   const blob = await response.blob();
   const converted = await heic2any({ blob, toType: 'image/jpeg', quality: 0.85 });
-  const outputBlob = Array.isArray(converted) ? converted[0] : converted;
+  const outputBlob = (Array.isArray(converted) ? converted[0] : converted)!;
 
   await cache.put(url, new Response(outputBlob, { headers: { 'Content-Type': 'image/jpeg' } }));
   return URL.createObjectURL(outputBlob);

@@ -64,7 +64,7 @@ const router = createRouter({
 })
 
 // Navigation Guard
-const getCurrentUser = async () => {
+const getCurrentUser = async (): Promise<import('firebase/auth').User | null> => {
   const { auth } = await import('../firebase')
   const { onAuthStateChanged } = await import('firebase/auth')
   return new Promise((resolve, reject) => {
