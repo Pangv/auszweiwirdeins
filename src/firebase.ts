@@ -1,7 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
 import { getAuth, connectAuthEmulator } from 'firebase/auth'
-import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'firebase/app-check'
 
 // HINWEIS: Diese Konfiguration muss mit den echten Daten aus der Firebase Console ersetzt werden.
 // Da ich keinen Zugriff auf die Console habe, erstelle ich ein Template.
@@ -21,11 +20,5 @@ export const auth = getAuth(app)
 if (import.meta.env.DEV) {
   connectFirestoreEmulator(db, '127.0.0.1', 8080)
   connectAuthEmulator(auth, 'http://127.0.0.1:9099')
-  console.log('Connected!')
-} else {
-  // noinspection JSUnusedLocalSymbols
-  initializeAppCheck(app, {
-    provider: new ReCaptchaEnterpriseProvider('6Lcnn14sAAAAAGTwY3HB8exwE7obTLDWaHgnt0v2'),
-    isTokenAutoRefreshEnabled: true,
-  })
+  console.log('Connected to Firebase emulators!')
 }
