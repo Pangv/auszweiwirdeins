@@ -99,12 +99,12 @@ const guests = ref<Guest[]>([
   { id: 10, count: 2, name: 'Michaela + Melvin', imageUrl: img_michaela_melvin },
   { id: 11, count: 4, name: 'Mark + Dörte + Jannes + Lasse', imageUrl: img_mark_doerte },
   { id: 12, count: 4, name: 'Andre', imageUrl: img_andre },
-  { id: 12, count: 1, name: 'Christel', imageUrl: 'https://placeholdit.com/600x400/dddddd/999999?text=Christel' },
+  { id: 21, count: 1, name: 'Christel', imageUrl: 'https://placeholdit.com/600x400/dddddd/999999?text=Christel' },
   { id: 14, count: 4, name: 'Sophie + Fabi, Johanna + Alex', imageUrl: img_sophie_fabi },
   { id: 18, count: 2, name: 'Silke + Pete', imageUrl: img_silke_pete },
-  { id: 18, count: 2, name: 'Katharina + Alex', imageUrl: img_katharina },
+  { id: 22, count: 2, name: 'Katharina + Alex', imageUrl: img_katharina },
   { id: 19, count: 2, name: 'Sarah + Olli', imageUrl: 'https://placeholdit.com/600x400/dddddd/999999?text=Sarah+Olli' },
-  { id: 19, count: 3, name: 'Gisela, Lukas, Felix', imageUrl: 'https://placeholdit.com/600x400/dddddd/999999?text=Gisela+Felix+Lukas' },
+  { id: 20, count: 3, name: 'Gisela, Lukas, Felix', imageUrl: 'https://placeholdit.com/600x400/dddddd/999999?text=Gisela+Felix+Lukas' },
 ]);
 
 const searchQuery = ref<string>('');

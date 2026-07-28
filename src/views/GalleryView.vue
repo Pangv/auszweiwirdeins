@@ -13,7 +13,7 @@
             Hochzeitsalbum.
           </p>
         </header>
-        <div v-if="isPasswordVerified" class="flex-shrink-0 self-start">
+        <div v-if="isPasswordVerified" class="shrink-0 self-start">
           <UploadArea :uploading="uploading" :upload-done="uploadDone" :upload-total="uploadTotal"
             :upload-progress="uploadProgress" :error="errorMsg" :drag-over="dragOver" @upload="handleUpload" />
         </div>
@@ -39,7 +39,7 @@
           <div class="flex-1 min-w-0">
             <StorageBar />
           </div>
-          <div v-if="galleryCode" class="flex items-center gap-2 flex-shrink-0 relative self-start md:self-auto">
+          <div v-if="galleryCode" class="flex items-center gap-2 shrink-0 relative self-start md:self-auto">
             <div class="code-badge"
               title="Dein persönlicher Code zum Bearbeiten deiner Fotos auf anderen Geräten. Klicken zum Kopieren."
               @click="copyCode">
@@ -61,7 +61,7 @@
             </div>
             <p v-if="recoveryError" class="text-xs text-accent font-bold absolute top-full mt-1">{{ recoveryError }}</p>
           </div>
-          <div v-else class="flex-shrink-0">
+          <div v-else class="shrink-0">
             <button class="text-xs underline opacity-70 hover:opacity-100" @click="requestNewCode">
               Code anfordern
             </button>
