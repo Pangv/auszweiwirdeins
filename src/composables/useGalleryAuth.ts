@@ -20,14 +20,12 @@ export function useGalleryAuth() {
   const password = ref<string>(localStorage.getItem(PASSWORD_KEY) || '')
   const isPasswordVerified = ref<boolean>(!!localStorage.getItem(PASSWORD_KEY))
 
-  const showCodePrompt = ref(false)
-  const codeInput = ref('')
-  const codeRecovering = ref(false)
-
-  const showPasswordPrompt = ref(!isPasswordVerified.value)
   const passwordVerifying = ref(false)
   const passwordError = ref('')
-  const editingCodeMode = ref<'new' | 'existing' | null>(null)
+
+  const codeCreated = ref('')
+  const codeInput = ref('')
+  const codeRecovering = ref(false)
 
   async function initAuth(): Promise<void> {
     return new Promise<void>((resolve) => {
@@ -49,28 +47,53 @@ export function useGalleryAuth() {
     })
   }
 
+  async function verifyPasswordAction(pw: string): Promise<boolean> {
+    if (!pw) return false
+    passwordVerifying.value = true
+    passwordError.value = ''
+    try {
+      const ok = await verifyPassword(pw, ownerId.value)
+      if (!ok) {
+        passwordError.value = 'Falsches Passwort.'
+        password.value = ''
+        isPasswordVerified.value = false
+        localStorage.removeItem(PASSWORD_KEY)
+        return false
+      }
+      localStorage.setItem(PASSWORD_KEY, pw)
+      password.value = pw
+      isPasswordVerified.value = true
+      return true
+    } catch {
+      passwordError.value = 'Verbindungsfehler.'
+      password.value = ''
+      isPasswordVerified.value = false
+      localStorage.removeItem(PASSWORD_KEY)
+      return false
+    } finally {
+      passwordVerifying.value = false
+    }
+  }
+
   async function requestNewCodeAction(): Promise<string> {
     const newCode = await requestNewCode(ownerId.value)
     localStorage.setItem(GALLERY_CODE_KEY, newCode)
     galleryCode.value = newCode
-    showCodePrompt.value = false
+    codeCreated.value = newCode
     return newCode
   }
 
-  async function recoverByCodeAction(): Promise<void> {
-    if (!codeInput.value || codeInput.value.length !== 8) return
+  async function recoverByCodeAction(code?: string): Promise<void> {
+    const c = code || codeInput.value
+    if (!c || c.length !== 8) throw new Error('Bitte einen 8-stelligen Code eingeben.')
     codeRecovering.value = true
     try {
-      const result = await recoverByCode(codeInput.value)
-      if (result) {
-        ownerId.value = result.ownerId
-        localStorage.setItem(OWNER_ID_KEY, result.ownerId)
-        localStorage.setItem(GALLERY_CODE_KEY, result.code)
-        galleryCode.value = result.code
-        showCodePrompt.value = false
-      } else {
-        throw new Error('Zugangscode nicht gefunden.')
-      }
+      const result = await recoverByCode(c)
+      if (!result) throw new Error('Code nicht gefunden.')
+      ownerId.value = result.ownerId
+      localStorage.setItem(OWNER_ID_KEY, result.ownerId)
+      localStorage.setItem(GALLERY_CODE_KEY, result.code)
+      galleryCode.value = result.code
     } finally {
       codeRecovering.value = false
     }
@@ -84,45 +107,18 @@ export function useGalleryAuth() {
         ownerId.value = recoveredOwnerId
         localStorage.setItem(OWNER_ID_KEY, recoveredOwnerId)
       }
-    } catch (e) {
-      console.error('tryAutoRecover:', e)
+    } catch {
+      // silent
     }
   }
 
-  async function verifyPasswordAction(): Promise<boolean> {
-    if (!password.value) return false
-    passwordVerifying.value = true
-    passwordError.value = ''
-    try {
-      const ok = await verifyPassword(password.value, ownerId.value)
-      if (!ok) {
-        passwordError.value = 'Falscher Bearbeitungs-Code!'
-        password.value = ''
-        isPasswordVerified.value = false
-        localStorage.removeItem(PASSWORD_KEY)
-        return false
-      }
-      localStorage.setItem(PASSWORD_KEY, password.value)
-      isPasswordVerified.value = true
-      showPasswordPrompt.value = false
-      editingCodeMode.value = null
-      return true
-    } catch {
-      passwordError.value = 'Verbindungsfehler.'
-      password.value = ''
-      isPasswordVerified.value = false
-      localStorage.removeItem(PASSWORD_KEY)
-      return false
-    } finally {
-      passwordVerifying.value = false
-    }
+  function clearCodeBanner() {
+    setTimeout(() => { codeCreated.value = '' }, 100)
   }
 
   function handleUnauthorizedUpload(): void {
     password.value = ''
     isPasswordVerified.value = false
-    showPasswordPrompt.value = true
-    editingCodeMode.value = null
     localStorage.removeItem(PASSWORD_KEY)
   }
 
@@ -131,18 +127,17 @@ export function useGalleryAuth() {
     galleryCode,
     password,
     isPasswordVerified,
-    showCodePrompt,
-    codeInput,
-    codeRecovering,
-    showPasswordPrompt,
     passwordVerifying,
     passwordError,
-    editingCodeMode,
+    codeCreated,
+    codeInput,
+    codeRecovering,
     initAuth,
+    verifyPassword: verifyPasswordAction,
     requestNewCode: requestNewCodeAction,
     recoverByCode: recoverByCodeAction,
     recoverOwnerId,
-    verifyPassword: verifyPasswordAction,
+    clearCodeBanner,
     handleUnauthorizedUpload,
   }
 }

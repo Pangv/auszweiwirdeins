@@ -53,9 +53,8 @@ function formatSize(bytes: number): string {
 
 <style scoped>
 .storage-bar {
-  width: 280px;
   font-size: 0.85rem;
-  color: var(--text-muted, #666);
+  color: var(--text-color, #222);
 }
 .stats-row {
   display: flex;
@@ -65,49 +64,53 @@ function formatSize(bytes: number): string {
   gap: 8px;
 }
 .photos-count {
-  font-weight: 500;
-  color: var(--text-color, #222);
+  font-weight: 600;
+  color: #111;
 }
 .size-info {
   flex: 1;
   text-align: right;
-  opacity: 0.8;
+  color: #374151;
+  font-weight: 500;
 }
 .percent {
-  font-weight: 600;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
   min-width: 3em;
   text-align: right;
+  color: #111;
 }
 .percent.warning {
-  color: #c8810a;
+  color: #b45309;
 }
 .percent.danger {
   color: #dc2626;
 }
 .progress-track {
   height: 6px;
-  background: #e5e7eb;
+  background: #d1d5db;
   border-radius: 3px;
   overflow: hidden;
 }
 .progress-fill {
   height: 100%;
-  background: #10b981;
+  background: #059669;
   border-radius: 3px;
   transition: width 0.5s ease, background 0.3s ease;
 }
 .progress-fill.warning {
-  background: #f59e0b;
+  background: #d97706;
 }
 .progress-fill.danger {
-  background: #ef4444;
+  background: #dc2626;
 }
 .error {
   color: #dc2626;
   cursor: help;
+  font-weight: 600;
 }
 .loading {
-  opacity: 0.5;
+  color: #6b7280;
+  font-weight: 500;
 }
 </style>

@@ -51,7 +51,7 @@ export function usePhotoManagement(
 
   const masonryColWidth = computed(() => {
     if (typeof window === 'undefined') return 280
-    return window.innerWidth < 640 ? 110 : 280
+    return window.innerWidth < 640 ? 110 : 350
   })
 
   const filteredPhotos = computed<Photo[]>(() => {

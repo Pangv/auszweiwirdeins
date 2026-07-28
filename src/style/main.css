@@ -20,6 +20,8 @@ h1, h2, .font-display {
   --color-primary: #003d20;
   --color-secondary: #E9E6D1;
   --color-accent: #ff5050;
+  --color-muted: #6b7280;
+  --color-border: #9ca3af;
 }
 
 @layer utilities {

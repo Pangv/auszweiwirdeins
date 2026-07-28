@@ -24,7 +24,7 @@ if (import.meta.env.DEV) {
   console.log('Connected!')
 } else {
   // noinspection JSUnusedLocalSymbols
-  const appCheck = initializeAppCheck(app, {
+  initializeAppCheck(app, {
     provider: new ReCaptchaEnterpriseProvider('6Lcnn14sAAAAAGTwY3HB8exwE7obTLDWaHgnt0v2'),
     isTokenAutoRefreshEnabled: true,
   })

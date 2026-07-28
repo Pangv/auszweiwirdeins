@@ -23,13 +23,6 @@ const router = createRouter({
       path: '/gaeste',
       name: 'Gäste',
       component: () => import('../views/GuestGallery.vue'),
-      meta: { requiresAuth: true, authType: 'password' },
-    },
-    {
-      path: '/password-check',
-      name: 'PasswordCheck',
-      component: () => import('../components/PasswordForm.vue'),
-      meta: { isAuthRoute: true },
     },
     {
       path: '/admin',
@@ -49,21 +42,17 @@ const router = createRouter({
     },
   ],
   scrollBehavior(to) {
-    // if (savedPosition) return savedPosition;
-
     if (to.hash) {
       return {
         el: to.hash,
         behavior: 'smooth',
-        top: 0, // optionaler Offset (s.u.)
+        top: 0,
       }
     }
-
     return { top: 0 }
   },
 })
 
-// Navigation Guard
 const getCurrentUser = async (): Promise<import('firebase/auth').User | null> => {
   const { auth } = await import('../firebase')
   const { onAuthStateChanged } = await import('firebase/auth')
@@ -79,28 +68,17 @@ const getCurrentUser = async (): Promise<import('firebase/auth').User | null> =>
   })
 }
 
-// Navigation Guards
 router.beforeEach(async (to, from, next) => {
-  // 1. Prüfen, ob Route eine reine Auth-Route ist (PasswordCheck)
-  if (to.matched.some((record) => record.meta.isAuthRoute)) {
-    next() // Diese Route soll immer zugänglich sein
-    return
-  }
-
-  // 2. Prüfen, ob Route benutzerdefinierte Auth benötigt
-  if (
-    to.matched.some((record) => record.meta.requiresAuth && record.meta.authType === 'password')
-  ) {
-    const isPasswordAuthenticated = await checkCustomAuth()
+  if (to.path === '/gaeste') {
+    const isPasswordAuthenticated = !!localStorage.getItem('galerie_password')
     if (isPasswordAuthenticated) {
       next()
     } else {
-      next('/password-check')
+      next('/galerie?redirect=/gaeste')
     }
     return
   }
 
-  // 3. Standard Firebase Auth Check
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     const user = await getCurrentUser()
     if (user && !user.isAnonymous) {
@@ -111,13 +89,7 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
-  // 4. Alle anderen Routen
   next()
 })
-
-// Benutzerdefinierte Passwortprüfung
-const checkCustomAuth = async () => {
-  return !!localStorage.getItem('galerie_password')
-}
 
 export default router
