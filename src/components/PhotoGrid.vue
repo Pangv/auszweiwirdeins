@@ -27,7 +27,7 @@
     </div>
 
     <!-- Tablet/Desktop: masonry with checkboxes and info overlay -->
-    <MasonryWall v-else :items="photos" :column-width="masonryColWidth" :gap="16" :ssr-columns="2" class="w-full">
+    <MasonryWall v-else-if="photos.length > 0" :items="photos" :column-width="masonryColWidth" :gap="16" :ssr-columns="2" class="w-full">
       <template #default="{ item: photo }">
         <div :key="photo.id" class="mb-2 rounded shadow-lg bg-white overflow-hidden transition-all duration-300"
           :class="{ 'opacity-40 scale-95': deletingIds.has(photo.id) }">
@@ -52,6 +52,7 @@
         </div>
       </template>
     </MasonryWall>
+    <div v-else class="hidden"></div>
   </div>
 </template>
 

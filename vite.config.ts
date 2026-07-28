@@ -12,10 +12,10 @@ const cspPolicy = [
   "connect-src 'self' https://galerie.auszweiwirdeins.de https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://accounts.google.com https://sveltia-cms-auth.sven-oliverpaetzel.workers.dev",
   "font-src 'self' https://fonts.bunny.net",
   "form-action 'self'",
-  "frame-src 'none'",
+  "frame-src https://kommrum-895d1.firebaseapp.com",
   "img-src 'self' https://images.unsplash.com https://placeholdit.com https://galerie.auszweiwirdeins.de data:",
   "manifest-src 'self'",
-  "script-src 'self' https://apis.google.com",
+  "script-src 'self' https://apis.google.com 'unsafe-eval'",
   "style-src 'self' https://fonts.bunny.net 'unsafe-inline'",
   "worker-src 'self' blob:",
 ].join('; ')
