@@ -179,10 +179,9 @@ const handleSubmit = async () => {
       <p class="mb-8 text-lg">Bitte melde dich über das Kontaktformular an.</p>
       <div class="card-decoration-container">
         <div class="card-decoration-bg rotate-2"></div>
-        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop'"
+        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop"
              class="card-image h-64 md:h-96 -rotate-4 hover:scale-105"
-             alt="Drinks"
-             loading="lazy">
+             alt="Drinks">
       </div>
     </div>
 

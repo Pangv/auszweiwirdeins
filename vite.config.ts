@@ -12,13 +12,12 @@ const cspPolicy = [
   "connect-src 'self' https://galerie.auszweiwirdeins.de https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://accounts.google.com https://sveltia-cms-auth.sven-oliverpaetzel.workers.dev",
   "font-src 'self' https://fonts.bunny.net",
   "form-action 'self'",
-  "frame-ancestors 'none'",
   "frame-src 'none'",
   "img-src 'self' https://images.unsplash.com https://placeholdit.com https://galerie.auszweiwirdeins.de data:",
   "manifest-src 'self'",
-  "script-src 'self'",
+  "script-src 'self' https://apis.google.com",
   "style-src 'self' https://fonts.bunny.net 'unsafe-inline'",
-  "worker-src 'none'",
+  "worker-src 'self' blob:",
 ].join('; ')
 
 // https://vite.dev/config/
