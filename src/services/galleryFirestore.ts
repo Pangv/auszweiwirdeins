@@ -12,7 +12,11 @@ import {
 
 export async function requestNewCode(ownerId: string): Promise<string> {
   if (!auth.currentUser) {
-    await signInAnonymously(auth)
+    try {
+      await signInAnonymously(auth)
+    } catch (e) {
+      throw new Error('Anonyme Anmeldung fehlgeschlagen: ' + (e as Error).message)
+    }
   }
   const newCode = Math.random().toString(36).substring(2, 10).toUpperCase()
   await addDoc(collection(db, 'gallery_owners'), {

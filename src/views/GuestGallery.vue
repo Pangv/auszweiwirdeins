@@ -24,7 +24,7 @@
         <img :src="guest.imageUrl" :alt="guest.name" loading="lazy" decoding="async"
           class="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
           @error="handleImageError" />
-        <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-2">
+        <div class="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/70 to-transparent p-2">
           <p class="bg-white px-1 py-1.5 w-fit text-black text-xs font-medium leading-tight">{{ guest.name }} 👥 {{
             guest.count }}</p>
         </div>
@@ -40,7 +40,7 @@
           <div class="relative">
             <img :src="guest.imageUrl" :alt="guest.name" loading="lazy" decoding="async" class="w-full h-auto block"
               @error="handleImageError" />
-            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-3">
+            <div class="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/60 to-transparent p-3">
               <p class="w-fit py-1.5 bg-white text-black px-1 text-sm font-medium">{{ guest.name }} 👥 {{ guest.count }}
               </p>
             </div>

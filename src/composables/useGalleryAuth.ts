@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { auth } from '../firebase'
-import { onAuthStateChanged, signInAnonymously } from 'firebase/auth'
+import { signInAnonymously } from 'firebase/auth'
 import { requestNewCode, recoverByCode, tryAutoRecover } from '../services/galleryFirestore'
 import { verifyPassword } from '../services/galleryApi'
 
@@ -28,23 +28,12 @@ export function useGalleryAuth() {
   const codeRecovering = ref(false)
 
   async function initAuth(): Promise<void> {
-    return new Promise<void>((resolve) => {
-      const unsub = onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          unsub()
-          resolve()
-        } else {
-          try {
-            await signInAnonymously(auth)
-            unsub()
-            resolve()
-          } catch {
-            unsub()
-            resolve()
-          }
-        }
-      })
-    })
+    if (auth.currentUser) return
+    try {
+      await signInAnonymously(auth)
+    } catch (e) {
+      console.error('initAuth: signInAnonymously failed', e)
+    }
   }
 
   async function verifyPasswordAction(pw: string): Promise<boolean> {
