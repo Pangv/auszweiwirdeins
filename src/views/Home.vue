@@ -12,9 +12,5 @@ const Footer = defineAsyncComponent(() => import("../components/Footer.vue"));
 
 <template>
   <Hero />
-  <Schedule />
-  <!-- <Teilnahme /> -->
-  <!-- <HotelSuggestions /> -->
-  <FAQ />
   <Footer />
 </template>
